@@ -452,7 +452,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 		{
 			ctx.fillStyle = "#FFFFFF";
 			ctx.font = "bold 24px Arial";
-			ctx.fillText("STARTING ROUND " + fadeRound+1 + " OF " + totalRounds, this.x + 70, this.y - 30);
+			ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + 70, this.y - 30);
 			ctx.fillText("KEEP IT UP!", this.x + 120, this.y + this.barHeight + 35);
 			
 			ctx.fillStyle = "#0099FF";
