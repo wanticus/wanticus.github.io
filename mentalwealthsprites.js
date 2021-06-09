@@ -2,11 +2,6 @@
 //sprites
 //
 
-const playerSpr = new Image();
-playerSpr.src = 'boots.png';
-const playerSprD = new Image();
-playerSprD.src = 'boots2.png';
-
 const playerIdle = new Image();
 playerIdle.src = 'Idle.png';
 const playerWalk = new Image();
