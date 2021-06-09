@@ -8,7 +8,7 @@ let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
 let frameTimer = 150; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 150; //amount of frames the player will walk between questions
+let walkTime = 100; //amount of frames the player will walk between questions
 let danceTime = 40; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
@@ -452,7 +452,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 		{
 			ctx.fillStyle = "#FFFFFF";
 			ctx.font = "bold 24px Arial";
-			ctx.fillText("STARTING ROUND " + fadeRound + " OF " + totalRounds, this.x + 70, this.y - 30);
+			ctx.fillText("STARTING ROUND " + fadeRound+1 + " OF " + totalRounds, this.x + 70, this.y - 30);
 			ctx.fillText("KEEP IT UP!", this.x + 120, this.y + this.barHeight + 35);
 			
 			ctx.fillStyle = "#0099FF";
