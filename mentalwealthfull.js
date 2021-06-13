@@ -945,7 +945,7 @@ function makeRounds()
 	rHome.addQuestion(new Question(["All my home is in the best possible state", "of repair."], 0, 1, rHome));
 	aRounds.push(rHome);
 	totalRounds += 1;
-	/* 
+	 
 	const rPossessions = new Round("THE HOME FRONT", "POSSESSIONS / ADMINISTRATION", background3);
 	rPossessions.addQuestion(new Question(["Further Observations"], 1, 15, rPossessions));
 	rPossessions.addQuestion(new Question(["Given the situation what one item would", "you rescue from your house?"], 1, 14, rPossessions));
@@ -1297,8 +1297,8 @@ function makeRounds()
 	rImprovement.addQuestion(new Question(["The induction programme for new", "starters is fit for purpose."], 2, 2, rImprovement));
 	rImprovement.addQuestion(new Question(["Everyone has a personal and professional", "development plan."], 2, 1, rImprovement));
 	aRounds.push(rImprovement);
-	totalRounds += 1; */
-
+	totalRounds += 1;
+	
 	aFinalRound = new FinalRound();
 	aRounds.push(aFinalRound);
 	totalRounds += 1;
