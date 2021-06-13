@@ -49,7 +49,7 @@ let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
 let frameTimer = 150; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 40; //amount of frames the player will walk between questions
+let walkTime = 50; //amount of frames the player will walk between questions
 let danceTime = 40; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
@@ -667,7 +667,7 @@ class Background
 			this.framesActive++;
 		}
 		var xPos = this.framesActive * this.scrollSpd % this.img.width * txtMultiplier;
-		var imgNum = 2;
+		var imgNum = 4;
 		
 		ctx.save();
 		ctx.globalAlpha = this.fadeValue; //global alpha is set to allow for the background to fade
