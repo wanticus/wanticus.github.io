@@ -14,9 +14,10 @@ body
 textarea
 {
 	position: absolute;
-	top: 40%;
+	top: 36%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -40%);
+	font-size: 14px;
 	resize: none;
 	outline: none;
 	border: none;

@@ -1,19 +1,59 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 450; //width of game area
-canvas.height = 800; //height of game area
+canvas.width = window.innerHeight * 0.5625; //width of game area (450)
+canvas.height = window.innerHeight; //height of game area (800)
+let canvasRatio = canvas.height / canvas.width;
+let txtMultiplier = (canvas.width/450);
+let borderBuffer = canvas.width * 0.02; //used to evenly space objects around the canvas
+let canvasPos = canvas.getBoundingClientRect();
+
+function resize() {
+	
+	if ((canvas.width > 1.125) && (canvas.height > 2))
+	{
+		var canvasRatio = canvas.height / canvas.width;
+		var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
+		var width;
+		var height;
+
+		if (windowRatio < canvasRatio) {
+			height = window.innerHeight;
+			width = height / canvasRatio;
+		} else {
+			width = window.innerHeight * 0.5625;
+			height = width * canvasRatio;
+		}
+		
+	/* 	if ((height < 2) || (width < 1))
+		{
+			width = 1.125;
+			height = 2;
+		} */
+
+		canvas.style.width = width + 'px';
+		canvas.style.height = height + 'px';
+		canvas.width = width;
+		canvas.height = height;
+		canvasRatio = canvas.height / canvas.width;
+		txtMultiplier = (canvas.width/450);
+		borderBuffer = canvas.width * 0.02;
+		canvasPos = canvas.getBoundingClientRect()
+		updateAll();
+	}
+};
+
+window.addEventListener('resize', resize, false);
 
 let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
 let frameTimer = 150; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 100; //amount of frames the player will walk between questions
+let walkTime = 40; //amount of frames the player will walk between questions
 let danceTime = 40; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
 let fadeRound = 0; //used to display which round is coming up next, not which round is currently active
-let borderBuffer = canvas.width * 0.02; //used to evenly space objects around the canvas
 let clickBuffer = 5; //stops mashing clicks
 let clickBufferCheck = 0; //counts down by 1 every frame when above zero, to check if another click can be made
 let currentRound = 0; //number currently active round
@@ -28,7 +68,6 @@ let aRounds = []; //stores each round of questions
 let txtArea = []; //stores text boxes when needed
 
 //Mouse
-let canvasPos = canvas.getBoundingClientRect();
 
 const mouse = {
 	x: canvas.width/2,
@@ -96,11 +135,11 @@ class Question
 		switch (this.type) //determine which buttons to make based on what type of question this is
 		{
 			case 2:
-				this.b1 = new Bttn(25, 300, 60, 60, "1", 1, 2);
-				this.b2 = new Bttn(110, 300, 60, 60, "2", 2, 2);
-				this.b3 = new Bttn(195, 300, 60, 60, "3", 3, 2);
-				this.b4 = new Bttn(280, 300, 60, 60, "4", 4, 2);
-				this.b5 = new Bttn(365, 300, 60, 60, "5", 5, 2);
+				this.b1 = new Bttn(0.0555, 0.375, 0.1333, 0.1333, "1", 1, 2);
+				this.b2 = new Bttn(0.2444, 0.375, 0.1333, 0.1333, "2", 2, 2);
+				this.b3 = new Bttn(0.4333, 0.375, 0.1333, 0.1333, "3", 3, 2);
+				this.b4 = new Bttn(0.6222, 0.375, 0.1333, 0.1333, "4", 4, 2);
+				this.b5 = new Bttn(0.8111, 0.375, 0.1333, 0.1333, "5", 5, 2);
 				aButtons.push(this.b1);
 				aButtons.push(this.b2);
 				aButtons.push(this.b3);
@@ -109,14 +148,14 @@ class Question
 				break;				
 			
 			case 1:
-				txtArea.push(new TextBox(1, "textarea", "8", "50"));
-				this.bSubmit = new Bttn(155, 370, 150, 50, "SUBMIT", 0, 1);
+				txtArea.push(new TextBox(1, "textarea", 0.01, 0.1111));
+				this.bSubmit = new Bttn(0.3444, 0.4625, 0.3333, 0.0625, "SUBMIT", 0, 1);
 				aButtons.push(this.bSubmit);
 				break;
 				
 			default:
-				this.bTrue = new Bttn(50, 300, 150, 60, "YES", 1, 0);
-				this.bFalse = new Bttn(250, 300, 150, 60, "NO", 0, 0);
+				this.bTrue = new Bttn(0.1111, 0.36, 0.3333, 0.075, "YES", 1, 0);
+				this.bFalse = new Bttn(0.5555, 0.36, 0.3333, 0.075, "NO", 0, 0); //UPDATE THIS LOT AND SORT THE 'WHAT IF THE BUTTONS NEED EXTRA X COORDINATES' THING
 				aButtons.push(this.bTrue);
 				aButtons.push(this.bFalse);
 				break;s
@@ -147,15 +186,15 @@ class Question
 		ctx.fillStyle = "#000000";
 		for (var i = 0; i < this.txt.length; i++) //draw each line of the question
 		{
-			ctx.fillText(this.txt[i], drawX, drawY + (22 * i)); //canvas cannot wrap text so text is stored in an array line by line
+			ctx.fillText(this.txt[i], drawX, drawY + ((canvas.height * 0.03) * i)); //canvas cannot wrap text so text is stored in an array line by line
 		}
 		
 		if (this.type == 2) //if this is a 1-5 question, display which end is low and which end is high
 		{
 			ctx.fillStyle = "#FFFFFF";
-			ctx.font = "16px Arial";
-			ctx.fillText("LOW", borderBuffer * 2, 390);
-			ctx.fillText("HIGH", canvas.width - (borderBuffer * 2) - 35, 390);
+			ctx.font = (16 * txtMultiplier) + "px Arial";
+			ctx.fillText("LOW", borderBuffer * 2, (canvas.height * 0.4875));
+			ctx.fillText("HIGH", canvas.width - (borderBuffer * 2) - (canvas.width * 0.0777), (canvas.height * 0.4875));
 		}
 	}
 }
@@ -245,26 +284,26 @@ class Round
 	draw()
 	{		
 		ctx.fillStyle = "#FFFFFF";
-		ctx.font = "bold 28px Arial";
-		ctx.fillText(this.title, borderBuffer, borderBuffer + 24);
+		ctx.font = "bold " + (28 * txtMultiplier) + "px Arial";
+		ctx.fillText(this.title, borderBuffer, borderBuffer + (canvas.height * 0.03));
 		
-		ctx.font = "bold 20px Arial";
-		ctx.fillText(this.subtitle, borderBuffer, 60);
+		ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
+		ctx.fillText(this.subtitle, borderBuffer, (borderBuffer * 4) + (canvas.height * 0.03));
 		
 		ctx.fillStyle = "#0099FF";
-		ctx.fillRect(0, canvas.height * 0.225, ((canvas.width) / 15) * (15 - this.qNum), 20);
+		ctx.fillRect(0, (canvas.height * 0.225), ((canvas.width) / 15) * (15 - this.qNum), (canvas.height * 0.025));
 		//ctx.fillStyle = "#880000";
 		//ctx.fillRect(borderBuffer, 370, ((canvas.width - (borderBuffer * 2)) / totalRounds) * currentRound, 20);
 		
 		ctx.fillStyle = "#000000";
-		ctx.font = "14`1px Arial";
+		//ctx.font = "14`1px Arial";
 		if (this.qNum >= 0 && frameTimer <= 0 && !player.dance)
 		{
-			this.questions[this.qNum].draw(borderBuffer * 2, (canvas.height * 0.1) + borderBuffer + 24);
+			this.questions[this.qNum].draw(borderBuffer * 2, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.03));
 		}
 		ctx.fillStyle = "#FFFFFF";
-		ctx.font = "bold 11px Arial";
-		ctx.fillText((15 - this.qNum) + "/15", (((canvas.width) / 15) * (15 - this.qNum)) - 29, canvas.height * 0.243);
+		ctx.font = "bold " + (11 * txtMultiplier) + "px Arial";
+		ctx.fillText((15 - this.qNum) + "/15", (((canvas.width) / 15) * (15 - this.qNum)) - (canvas.width * 0.0644), canvas.height * 0.243);
 	}
 }
 
@@ -317,18 +356,18 @@ class FinalRound
 		player.active = false;
 		player.dance = false;
 		
-		this.txtBox = new TextBox(1, "textarea", "1", "35");
+		this.txtBox = new TextBox(1, "textarea", 0.00125, 0.0777);
 		
 		for (var i=0; i<this.posMax+1; i++)
 		{
 			this.members.push(new ScorecardMember()); //create the people for the scorecard
 		}
 		
-		aButtons.push(new Bttn(borderBuffer, 250, 50, 100, "<", -1, 3));
-		aButtons.push(new Bttn(canvas.width - 50 - borderBuffer, 250, 50, 100, ">", 1, 3));
-		aButtons.push(new Bttn(borderBuffer + (canvas.width * 0.25), 320, 40, 40, "-", -1, 4));
-		aButtons.push(new Bttn(canvas.width - (canvas.width * 0.25) - 50 - borderBuffer, 320, 40, 40, "+", 1, 4));
-		aButtons.push(new Bttn((canvas.width *0.5) - 75, 385, 150, 40, "SUBMIT", 0, 5));
+		aButtons.push(new Bttn(0.02, 0.3125, 0.1111, 0.125, "<", -1, 3));
+		aButtons.push(new Bttn(0.8667, 0.3125, 0.1111, 0.125, ">", 1, 3));
+		aButtons.push(new Bttn(0.27, 0.40, 0.0888, 0.0888, "-", -1, 4));
+		aButtons.push(new Bttn(0.642, 0.40, 0.0888, 0.0888, "+", 1, 4));
+		aButtons.push(new Bttn(0.3444, 0.4813, 0.3333, 0.05, "SUBMIT", 0, 5));
 	}
 	
 	deactivate() //end the scorecard section
@@ -338,7 +377,7 @@ class FinalRound
 		{
 			aButtons.pop(); //remove buttons
 		}
-		aButtons.push(new Bttn((canvas.width *0.5) - 100, 385, 200, 40, "GET RESULTS", 0, 6)); //add a new button to get the PDF
+		aButtons.push(new Bttn((canvas.width * 0.5) - (canvas.height * 0.2222), (canvas.height * 0.4813), (canvas.width * 0.4444), (canvas.height * 0.05), "GET RESULTS", 0, 6)); //add a new button to get the PDF
 	}
 	
 	deactivateAgain() //generates the PDF and ends questionnaire
@@ -347,6 +386,7 @@ class FinalRound
 		aButtons.pop();
 		endOfQuestions = true;
 		player.dance = true;
+		this.activated = false;
 	}
 	
 	scrollThrough(scrollVal) //scrolling through the list of scorecard members
@@ -370,7 +410,6 @@ class FinalRound
 		}
 		else if (value > maxValue)
 		{
-			console.log(value + " " + maxValue);
 			value = maxValue;
 		}
 		
@@ -396,36 +435,40 @@ class FinalRound
 	{
 		if (this.activated)
 		{			
+				this.txtBox.update();
+			
 				ctx.fillStyle = "#FFFFFF";
-				ctx.font = "bold 32px Arial";
-				ctx.fillText("MENTAL WEALTH", borderBuffer, borderBuffer + 24); 	
-				ctx.fillText("TEAM SCORECARD", borderBuffer, borderBuffer + 60);
+				ctx.font = "bold " + (32 * txtMultiplier) + "px Arial";
+				ctx.fillText("MENTAL WEALTH", borderBuffer, borderBuffer + (canvas.height * 0.03)); 	
+				ctx.fillText("TEAM SCORECARD", borderBuffer, borderBuffer + (canvas.height * 0.075));
 			
 				if (this.end)
 				{		
-					ctx.font = "18px Arial";
-					ctx.fillText("Your Name:", 90, 270);
+					ctx.font = (18 * txtMultiplier) + "px Arial";
+					ctx.fillText("Your Name:", (canvas.width * 0.2), (canvas.height * 0.3375));
 					
 					ctx.fillStyle = "#000000";
-					ctx.font = "bold 20px Arial";
-					ctx.fillText("Enter you name to get your results!", borderBuffer, (canvas.height * 0.1) + borderBuffer + 12);
+					ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
+					ctx.fillText("Enter you name to get your results!", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.015));
 				}
 				else
 				{
-					ctx.font = "bold 48px Arial";
-					ctx.fillText(this.members[this.pos].getScore(), (canvas.width * 0.5) - 24, 350);
+					ctx.font = "bold " + (48 * txtMultiplier) + "px Arial";
+					var scorePad = 0.03;
+					if (this.members[this.pos].getScore() == 10) { scorePad = 0.05; }
+					ctx.fillText(this.members[this.pos].getScore(), (canvas.width * 0.5) - (canvas.width * scorePad), (canvas.height * 0.44));
 					
-					ctx.font = "18px Arial";
-					ctx.fillText("Person #" + (this.pos + 1) + ":", 90, 270);
+					ctx.font = (18 * txtMultiplier) + "px Arial";
+					ctx.fillText("Person #" + (this.pos + 1) + ":", (canvas.width * 0.2), (canvas.height * 0.3375));
 					
 					ctx.fillStyle = "#000000";
-					ctx.font = "16px Arial";
-					ctx.fillText("Think about who already fits the bill for your mental wealth", borderBuffer, (canvas.height * 0.1) + borderBuffer + 12);
-					ctx.fillText("team in your existing network. Complete the following by", borderBuffer, (canvas.height * 0.1) + borderBuffer + 30);
-					ctx.fillText("scoring each person's commitment level to you between", borderBuffer, (canvas.height * 0.1) + borderBuffer + 48);
-					ctx.fillText("1-10, where 1 is low, and 10 is high. Do not overthink these", borderBuffer, (canvas.height * 0.1) + borderBuffer + 66);
-					ctx.fillText("numbers, it's just down to how you feel.", borderBuffer, (canvas.height * 0.1) + borderBuffer + 84);
-					ctx.fillText("Only press 'SUBMIT' once you've entered everyone you can.", borderBuffer, (canvas.height * 0.1) + borderBuffer + 102);
+					ctx.font = (16 * txtMultiplier) + "px Arial";
+					ctx.fillText("Think about who already fits the bill for your mental wealth", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.015));
+					ctx.fillText("team in your existing network. Complete the following by", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.0375));
+					ctx.fillText("scoring each person's commitment level to you between", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.06));
+					ctx.fillText("1-10, where 1 is low, and 10 is high. Do not overthink these", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.0825));
+					ctx.fillText("numbers, it's just down to how you feel.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.105));
+					ctx.fillText("Only press 'SUBMIT' once you've entered everyone you can.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.1275));
 				
 			}
 		}
@@ -442,8 +485,8 @@ class MapScreen //progress bar that is displayed during fading transistions
 	constructor()
 	{
 		this.x = borderBuffer;
-		this.y = 300;
-		this.barHeight = 50;
+		this.y = (canvas.height * 0.375);
+		this.barHeight = (canvas.height * 0.0625);
 	}
 	
 	draw()
@@ -451,9 +494,10 @@ class MapScreen //progress bar that is displayed during fading transistions
 		if (((fadeTime <= (fadeTimeTrue * 0.98)) && (fadeTime >= (fadeTimeTrue * 0.02))) )// && currentRound > 0)
 		{
 			ctx.fillStyle = "#FFFFFF";
-			ctx.font = "bold 24px Arial";
-			ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + 70, this.y - 30);
-			ctx.fillText("KEEP IT UP!", this.x + 120, this.y + this.barHeight + 35);
+			ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
+			//ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
+			ctx.fillText("MENTAL WEALTH METER:", this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
+			ctx.fillText("KEEP IT UP!", this.x + (canvas.width * 0.2666), this.y + this.barHeight + (canvas.height * 0.0437));
 			
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))), this.barHeight);
@@ -469,15 +513,21 @@ class MapScreen //progress bar that is displayed during fading transistions
 
 class Bttn
 {
-	constructor(x, y, width, height, txt, score, type)
+	constructor(xMultiply, yMultiply, wMultiply, hMultiply, txt, score, type)
 	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.xMultiply = xMultiply;
+		this.x = (canvas.width * this.xMultiply);
+		this.yMultiply = yMultiply;
+		this.y = (canvas.height * this.yMultiply);
+		this.wMultiply = wMultiply;
+		this.width = (canvas.width * this.wMultiply);
+		this.hMultiply = hMultiply;
+		this.height = (canvas.height * this.hMultiply);
 		this.txt = txt;
+		//this.txtMultiplier = (canvas.width / 450);
 		this.score = score;
 		this.type = type; // 0 : true or false / 1 : submit text / 2 : 1 to 5 / 3 : scrolling scorecard members / 4 : changing scorecard members score / 5 : submit scorecard / 6 : generate pdf
+		this.update();
 	}
 	
 	clicked()
@@ -542,13 +592,32 @@ class Bttn
 			}
 	}
 	
+	update()
+	{
+		this.x = (canvas.width * this.xMultiply);
+		this.y = (canvas.height * this.yMultiply);
+		this.width = (canvas.width * this.wMultiply);
+		
+		if ((this.type == 2) || (this.type == 4))
+		{
+			this.height = (canvas.width * this.wMultiply);
+		}
+		else
+		{
+			this.height = (canvas.height * this.hMultiply);
+		}
+		
+		txtMultiplier = (canvas.width/450);
+	}
+	
 	draw()
 	{
 		ctx.fillStyle = "#FFFFFF";
 		ctx.fillRect(this.x, this.y, this.width, this.height);
+		
 		ctx.fillStyle = "#000000";
-		ctx.font = "bold 24px Arial";
-		ctx.fillText(this.txt, this.x + (this.width * 0.5) - (this.txt.length * 15 * 0.5), this.y + (this.height * 0.65));
+		ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
+		ctx.fillText(this.txt, this.x + (this.width * 0.5) - (this.txt.length * 15 * 0.5 * txtMultiplier), this.y + (this.height * 0.65));
 	}
 }
 
@@ -597,7 +666,7 @@ class Background
 		{
 			this.framesActive++;
 		}
-		var xPos = this.framesActive * this.scrollSpd % this.img.width;
+		var xPos = this.framesActive * this.scrollSpd % this.img.width * txtMultiplier;
 		var imgNum = 2;
 		
 		ctx.save();
@@ -605,7 +674,7 @@ class Background
 		ctx.translate(-xPos, 0);
 		for (var i = 0; i < imgNum; i++)
 		{
-			ctx.drawImage(this.img, i * this.img.width, canvas.height - this.img.height);
+			ctx.drawImage(this.img, i * this.img.width * 0.5 * txtMultiplier, canvas.height - (this.img.height*0.5*txtMultiplier), this.img.width * 0.5 * txtMultiplier, this.img.height * 0.5 * txtMultiplier);
 		}		
 		ctx.restore();
 		ctx.globalAlpha = 1; //global alpha must be reset to 1 here as otherwise all other objects will be drawn with same alpha as the background
@@ -665,8 +734,8 @@ class Player
 		this.sprites = [playerIdle, playerWalk, playerAnswer]; //array to store sprites in position of corresponding state number
 		this.active = true; //whether playing is moving or standing still
 		this.dance = false; //whether player has just answered a question or not
-		this.x = -200;
-		this.y = 510;
+		this.x = -(canvas.width * 0.4444);
+		this.y = (canvas.height * 0.69);
 	}
 	
 	update()
@@ -697,6 +766,9 @@ class Player
 				}
 			}
 			this.frameXMax = 4;
+			
+			this.x = -(canvas.width * 0.4444);
+			this.y = (canvas.height * 0.66);
 		}
 		
 		if (gameFrame % this.frameSpeed == 0) //if at a frame to animate
@@ -717,7 +789,7 @@ class Player
 	draw()
 	{
 		ctx.save();
-		ctx.drawImage(this.sprites[this.state], (this.frameX * this.sprWidth), (this.frameY * this.sprHeight), this.sprWidth, this.sprHeight, this.x, this.y, this.sprWidth * 0.5, this.sprHeight * 0.5);	
+		ctx.drawImage(this.sprites[this.state], (this.frameX * this.sprWidth), (this.frameY * this.sprHeight), this.sprWidth, this.sprHeight, this.x, this.y, this.sprWidth * 0.5 * txtMultiplier, this.sprHeight * 0.5 * txtMultiplier);	
 		ctx.restore();
 	}
 }
@@ -731,11 +803,15 @@ class TextBox
 	constructor(id, type, rows, cols)
 	{
 		this.id = id;
+		this.rows = rows;
+		this.cols = cols;
 		this.para = document.createElement("P");
 		this.x = document.createElement("TEXTAREA");
 		this.x.setAttribute("type", type);
-		this.x.setAttribute("rows", rows);
-		this.x.setAttribute("cols", cols);
+		this.x.setAttribute("rows", "" + Math.round(canvas.height * rows));
+		this.x.setAttribute("cols", "" + Math.round(canvas.width * cols));
+		this.x.setAttribute("font-size", "" + Math.round(14 * txtMultiplier));
+		console.log(this.x.getAttribute("rows") + " " + this.x.getAttribute("cols"));
 		this.para.appendChild(this.x);
 		document.getElementById("txtdisplay").appendChild(this.x);
 	}
@@ -748,6 +824,26 @@ class TextBox
 	setText(newText)
 	{
 		this.x.value = newText;
+	}
+	
+	update()
+	{
+		var txtValue = this.getText();
+		console.log(canvas.height + " " + this.rows);
+		
+		document.getElementById("txtdisplay").removeChild(this.x);
+		
+		console.log(canvas.height + " " + this.rows);
+		this.x = document.createElement("TEXTAREA");
+		this.x.setAttribute("type", this.type);
+		this.x.setAttribute("rows", "" + Math.round(canvas.height * this.rows));
+		this.x.setAttribute("cols", "" + Math.round(canvas.width * this.cols));
+		this.x.setAttribute("font-size", "" + Math.round(24 * txtMultiplier));
+		this.setText(txtValue);
+		console.log((canvas.height * this.rows) + " " + (canvas.width * this.cols));
+		
+		this.para.appendChild(this.x);
+		document.getElementById("txtdisplay").appendChild(this.x);
 	}
 	
 	remove()
@@ -811,9 +907,10 @@ const background20 = new Background(bg20, 5);
 
 function makeRounds()
 {
+
 	const rFamily = new Round("THE HOME FRONT", "FAMILY", background1);
 	rFamily.addQuestion(new Question(["Further Observations"], 1, 15, rFamily));
-	rFamily.addQuestion(new Question(["What changes are on the horizon in your", "family and how will you manage them?"], 1, 14, rFamily));
+	 rFamily.addQuestion(new Question(["What changes are on the horizon in your", "family and how will you manage them?"], 1, 14, rFamily));
 	rFamily.addQuestion(new Question(["Can you describe what would be an ideal", "family environment for you?"], 1, 13, rFamily));
 	rFamily.addQuestion(new Question(["What is your current relationship with your", "family?"], 1, 12, rFamily));
 	rFamily.addQuestion(new Question(["When was your last family holiday / short", "break and what did you do?"], 1, 11, rFamily));
@@ -848,7 +945,7 @@ function makeRounds()
 	rHome.addQuestion(new Question(["All my home is in the best possible state", "of repair."], 0, 1, rHome));
 	aRounds.push(rHome);
 	totalRounds += 1;
-
+	/* 
 	const rPossessions = new Round("THE HOME FRONT", "POSSESSIONS / ADMINISTRATION", background3);
 	rPossessions.addQuestion(new Question(["Further Observations"], 1, 15, rPossessions));
 	rPossessions.addQuestion(new Question(["Given the situation what one item would", "you rescue from your house?"], 1, 14, rPossessions));
@@ -1200,7 +1297,7 @@ function makeRounds()
 	rImprovement.addQuestion(new Question(["The induction programme for new", "starters is fit for purpose."], 2, 2, rImprovement));
 	rImprovement.addQuestion(new Question(["Everyone has a personal and professional", "development plan."], 2, 1, rImprovement));
 	aRounds.push(rImprovement);
-	totalRounds += 1;
+	totalRounds += 1; */
 
 	aFinalRound = new FinalRound();
 	aRounds.push(aFinalRound);
@@ -1494,6 +1591,27 @@ function gameLoop()
 //animation
 //
 
+function updateAll()
+{
+	if (aButtons.length > 0)
+	{
+		for (var i=0; i<aButtons.length; i++)
+		{
+			aButtons[i].update();
+		}
+	}
+	
+	if (txtArea.length > 0)
+	{
+		console.log("TXTAREA");
+		for (var i=0; i<txtArea.length; i++)
+		{
+			console.log(i + " " + txtArea[i].getText());
+			txtArea[i].update();
+		}
+	}
+}
+
 function animate()
 {
 	gameLoop();
@@ -1524,9 +1642,9 @@ function animate()
 	{			
 			ctx.fillStyle = "#FFFFFF";
 			ctx.font = "bold 32px Arial";
-			ctx.fillText("THANKS FOR PLAYING!", 40, 260);
-			ctx.drawImage(mpLogo, 0, canvas.height * 0.08, mpLogo.width * 0.2, mpLogo.height * 0.2);
-			ctx.drawImage(bcLogo, (canvas.width * 0.5) - ((bcLogo.width * 0.05) * 0.5), 300, bcLogo.width * 0.05, bcLogo.height * 0.05); //draw end screen with logos/credits
+			ctx.fillText("THANKS FOR PLAYING!", (canvas.width * 0.0888), (canvas.height * 0.325));
+			ctx.drawImage(mpLogo, 0, canvas.height * 0.08, mpLogo.width * 0.2 * txtMultiplier, mpLogo.height * 0.2 * txtMultiplier);
+			ctx.drawImage(bcLogo, (canvas.width * 0.5) - ((bcLogo.width * 0.05) * 0.5), (canvas.height * 0.375), bcLogo.width * 0.05, bcLogo.height * 0.05); //draw end screen with logos/credits
 	}
 	
 	drawObjs(aButtons); //draw any buttons that are active
@@ -1539,4 +1657,6 @@ function animate()
 		generatePDF(); //make the PDF
 	}
 }
+
+resize();
 animate(); //starts the game
