@@ -1,4 +1,17 @@
 //
+//audio
+//
+
+const sndRoundEnd = new Audio('cheer.wav');
+
+let sndAnswering = [];
+sndAnswering.push(new Audio('answer.wav'));
+sndAnswering.push(new Audio('answer3.wav'));
+sndAnswering.push(new Audio('answer4.wav'));
+sndAnswering.push(new Audio('answer5.wav'));
+sndAnswering.push(new Audio('answer6.wav'));
+
+//
 //sprites
 //
 

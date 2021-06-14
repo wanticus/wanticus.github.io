@@ -278,6 +278,7 @@ class Round
 			}
 			fadeAway = true;
 			fadeRound += 1; //begin the fading transition
+			sndRoundEnd.play();
 		}
 	}
 	
@@ -548,6 +549,7 @@ class Bttn
 					txtArea.pop();
 					player.frameX = 0;
 					player.frameY = 0; //reset player animation frames
+					sndAnswering[Math.floor(Math.random() * 5)].play();
 					break;
 					
 				case 3:
@@ -588,6 +590,7 @@ class Bttn
 					}
 					player.frameX = 0;
 					player.frameY = 0;
+					sndAnswering[Math.floor(Math.random() * 5)].play();
 					break;
 			}
 	}
