@@ -48,9 +48,9 @@ window.addEventListener('resize', resize, false);
 let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
-let frameTimer = 150; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 50; //amount of frames the player will walk between questions
-let danceTime = 40; //amount of frames player will celebrate after select an option
+let frameTimer = 80; //timer that counts down by 1 each frame when above 0, used for animations and transitions
+let walkTime = 40; //amount of frames the player will walk between questions
+let danceTime = 40;//0; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
 let fadeRound = 0; //used to display which round is coming up next, not which round is currently active
@@ -176,13 +176,15 @@ class Question
 		return this.answer;
 	}
 	
-	getTxt()
+	/* getTxt()
 	{
 		return this.txt;
-	}
+	} */
 	
 	draw(drawX, drawY) //draws all text of the screen for the question
 	{
+		ctx.save();
+		
 		ctx.fillStyle = "#000000";
 		for (var i = 0; i < this.txt.length; i++) //draw each line of the question
 		{
@@ -196,16 +198,18 @@ class Question
 			ctx.fillText("LOW", borderBuffer * 2, (canvas.height * 0.4875));
 			ctx.fillText("HIGH", canvas.width - (borderBuffer * 2) - (canvas.width * 0.0777), (canvas.height * 0.4875));
 		}
+		
+		ctx.restore();
 	}
 }
 
 class Round
 {	
-	constructor(title, subtitle, background)
+	constructor(title, subtitle)//, background)
 	{
 		this.title = title; //the title of the round e.g. The Homefront
 		this.subtitle = subtitle; //the subsection of the round e.g. Family
-		this.background = background; //what background to display during this round
+		//this.background = background; //what background to display during this round
 		this.currentQuestion = 0; //which question is currently in play
 		this.questions = []; //array to store the questions in this round / questions are stored from last to first due to the way the code works
 		this.roundScore = 0; //total score for this round
@@ -253,7 +257,7 @@ class Round
 		{
 			if (this.questions[i].type != 1)
 			{
-				scr += this.questions[i].getAnswer();
+				scr += this.questions[i].answer;
 			}
 		}
 		
@@ -283,7 +287,9 @@ class Round
 	}
 	
 	draw()
-	{		
+	{	
+		ctx.save();
+	
 		ctx.fillStyle = "#FFFFFF";
 		ctx.font = "bold " + (28 * txtMultiplier) + "px Arial";
 		ctx.fillText(this.title, borderBuffer, borderBuffer + (canvas.height * 0.03));
@@ -305,6 +311,8 @@ class Round
 		ctx.fillStyle = "#FFFFFF";
 		ctx.font = "bold " + (11 * txtMultiplier) + "px Arial";
 		ctx.fillText((15 - this.qNum) + "/15", (((canvas.width) / 15) * (15 - this.qNum)) - (canvas.width * 0.0644), canvas.height * 0.243);
+		
+		ctx.restore();
 	}
 }
 
@@ -345,7 +353,7 @@ class FinalRound
 		this.posMax = 44; //maximum amount of people in the list - 1
 		this.members = []; //array for storing each ScorecardMember
 		this.txtBox = -1; //text box for entering names / cannot be defined straight away otherwise it will instantly appear
-		this.background = new Background(bg1, 5); //background to display for this part
+		//this.background = new Background(bg1, 5); //background to display for this part
 		this.activated = false; //whether or not the round has been activated
 		this.end = false; //whether we are at the end of the scorecard section
 	}	
@@ -374,8 +382,10 @@ class FinalRound
 	deactivate() //end the scorecard section
 	{
 		this.end = true;
-		for (var b=0; b<5; b++)
+		for (var b=4; b>=0; b--)
 		{
+			console.log(387);
+			delete aButtons[b];
 			aButtons.pop(); //remove buttons
 		}
 		aButtons.push(new Bttn((canvas.width * 0.5) - (canvas.height * 0.2222), (canvas.height * 0.4813), (canvas.width * 0.4444), (canvas.height * 0.05), "GET RESULTS", 0, 6)); //add a new button to get the PDF
@@ -383,7 +393,9 @@ class FinalRound
 	
 	deactivateAgain() //generates the PDF and ends questionnaire
 	{
+		console.log(396);
 		this.txtBox.remove();
+		delete aButtons[0];
 		aButtons.pop();
 		endOfQuestions = true;
 		player.dance = true;
@@ -392,7 +404,7 @@ class FinalRound
 	
 	scrollThrough(scrollVal) //scrolling through the list of scorecard members
 	{
-		this.members[this.pos].setName(this.txtBox.getText()); //saves the name in the text box for the current member
+		this.members[this.pos].setName(this.txtBox.x.value); //saves the name in the text box for the current member
 		this.pos = this.checkInRange(this.pos + scrollVal, 0, this.posMax); //move to the next member, making sure we do not go below 0 or above 44
 		this.txtBox.setText(this.members[this.pos].getName()); //updates text box to show new members name
 	}
@@ -435,7 +447,8 @@ class FinalRound
 	draw()
 	{
 		if (this.activated)
-		{			
+		{		
+				ctx.save();
 				this.txtBox.update();
 			
 				ctx.fillStyle = "#FFFFFF";
@@ -470,8 +483,9 @@ class FinalRound
 					ctx.fillText("1-10, where 1 is low, and 10 is high. Do not overthink these", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.0825));
 					ctx.fillText("numbers, it's just down to how you feel.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.105));
 					ctx.fillText("Only press 'SUBMIT' once you've entered everyone you can.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.1275));
+				}
 				
-			}
+				ctx.restore();
 		}
 		
 	}
@@ -494,6 +508,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 	{
 		if (((fadeTime <= (fadeTimeTrue * 0.98)) && (fadeTime >= (fadeTimeTrue * 0.02))) )// && currentRound > 0)
 		{
+			ctx.save();
 			ctx.fillStyle = "#FFFFFF";
 			ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
 			//ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
@@ -503,7 +518,8 @@ class MapScreen //progress bar that is displayed during fading transistions
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))), this.barHeight);
 			
-			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y);
+			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y + (canvas.height * 0.05));
+			ctx.restore();
 		}
 	}
 }
@@ -536,14 +552,16 @@ class Bttn
 			switch(this.type)
 			{
 				case 1:
-					if (txtArea[0].getText() == "" || txtArea[0].getText() == " ") //if text box is empty
+					if (txtArea[0].x.value == "" || txtArea[0].x.value == " ") //if text box is empty
 					{
 						aRounds[currentRound].answerQuestion("N/A", this.type); //set answer to N/A
 					}
 					else
 					{
-						aRounds[currentRound].answerQuestion(txtArea[0].getText(), this.type); //else get the text
+						aRounds[currentRound].answerQuestion(txtArea[0].x.value, this.type); //else get the text
 					}
+					console.log(563);
+					delete aButtons[0];
 					aButtons.pop();
 					txtArea[0].remove(); //remove buttons and text box
 					txtArea.pop();
@@ -561,7 +579,7 @@ class Bttn
 					break;
 
 				case 5:
-					aFinalRound.members[aFinalRound.pos].setName(aFinalRound.txtBox.getText());
+					aFinalRound.members[aFinalRound.pos].setName(aFinalRound.txtBox.x.value);
 					aFinalRound.txtBox.setText("");
 					aFinalRound.deactivate();
 					player.frameX = 0;
@@ -569,23 +587,25 @@ class Bttn
 					break;
 
 				case 6:
-					if ((aFinalRound.txtBox.getText() != "") && (aFinalRound.txtBox.getText() != " "))
+					if ((aFinalRound.txtBox.x.value != "") && (aFinalRound.txtBox.x.value != " "))
 					{
-						username = aFinalRound.txtBox.getText();
+						username = aFinalRound.txtBox.x.value;
 						aFinalRound.deactivateAgain();
 					}
 					break;
 				
 				default:
-					var forMax = 2;
+					var forMax = 1;
 					if (this.type == 2)
 					{
-						forMax = 5;
+						forMax = 4;
 					}				
 				
 					aRounds[currentRound].answerQuestion(this.score, this.type);
-					for (var i = 0; i < forMax; i++)
+					for (var i = forMax; i >= 0; i--)
 					{
+						console.log(607 + " attempt " + i);
+						delete aButtons[i];
 						aButtons.pop();
 					}
 					player.frameX = 0;
@@ -615,12 +635,14 @@ class Bttn
 	
 	draw()
 	{
+		ctx.save();
 		ctx.fillStyle = "#FFFFFF";
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 		
 		ctx.fillStyle = "#000000";
 		ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
 		ctx.fillText(this.txt, this.x + (this.width * 0.5) - (this.txt.length * 15 * 0.5 * txtMultiplier), this.y + (this.height * 0.65));
+		ctx.restore();
 	}
 }
 
@@ -638,6 +660,7 @@ class Background
 		this.framesActive = gameFrame; //how many frames background has been animated for, allows for scrolling image to be smooth
 		this.fadeOut = false; //fading in/out or not
 		this.fadeValue = 0; // 0 = invisible / 100 = visible
+		this.bgNum = 0;
 	}
 	
 	draw()
@@ -670,7 +693,7 @@ class Background
 			this.framesActive++;
 		}
 		var xPos = this.framesActive * this.scrollSpd % this.img.width * txtMultiplier;
-		var imgNum = 4;
+		var imgNum = 3;
 		
 		ctx.save();
 		ctx.globalAlpha = this.fadeValue; //global alpha is set to allow for the background to fade
@@ -831,7 +854,7 @@ class TextBox
 	
 	update()
 	{
-		var txtValue = this.getText();
+		var txtValue = this.x.value;
 		console.log(canvas.height + " " + this.rows);
 		
 		document.getElementById("txtdisplay").removeChild(this.x);
@@ -852,6 +875,7 @@ class TextBox
 	remove()
 	{
 		document.getElementById("txtdisplay").removeChild(this.x);
+		delete this;
 	}
 }
 
@@ -882,9 +906,10 @@ const uiHand = new UIHandler();
 //
 //create backgrounds
 //
-
-const background1 = new Background(bg1, 5);
-const background2 = new Background(bg2, 5);
+let bg = new Image()
+bg.src = BGs[0];
+const background = new Background(bg, 5);
+/* const background2 = new Background(bg2, 5);
 const background3 = new Background(bg3, 5);
 const background4 = new Background(bg4, 5);
 const background5 = new Background(bg5, 5);
@@ -902,7 +927,7 @@ const background16 = new Background(bg16, 5);
 const background17 = new Background(bg17, 5);
 const background18 = new Background(bg18, 5);
 const background19 = new Background(bg19, 5);
-const background20 = new Background(bg20, 5);
+const background20 = new Background(bg20, 5); */
 
 //
 //create questions
@@ -911,9 +936,9 @@ const background20 = new Background(bg20, 5);
 function makeRounds()
 {
 
-	const rFamily = new Round("THE HOME FRONT", "FAMILY", background1);
+	const rFamily = new Round("THE HOME FRONT", "FAMILY")//, background1);
 	rFamily.addQuestion(new Question(["Further Observations"], 1, 15, rFamily));
-	 rFamily.addQuestion(new Question(["What changes are on the horizon in your", "family and how will you manage them?"], 1, 14, rFamily));
+	rFamily.addQuestion(new Question(["What changes are on the horizon in your", "family and how will you manage them?"], 1, 14, rFamily));
 	rFamily.addQuestion(new Question(["Can you describe what would be an ideal", "family environment for you?"], 1, 13, rFamily));
 	rFamily.addQuestion(new Question(["What is your current relationship with your", "family?"], 1, 12, rFamily));
 	rFamily.addQuestion(new Question(["When was your last family holiday / short", "break and what did you do?"], 1, 11, rFamily));
@@ -930,7 +955,7 @@ function makeRounds()
 	aRounds.push(rFamily);
 	totalRounds += 1;
 
-	const rHome = new Round("THE HOME FRONT", "HOME", background2);
+	const rHome = new Round("THE HOME FRONT", "HOME")//, background2);
 	rHome.addQuestion(new Question(["Further Observations"], 1, 15, rHome));
 	rHome.addQuestion(new Question(["How long do you expect to continue living", "where you currently are?"], 1, 14, rHome));
 	rHome.addQuestion(new Question(["If you were to create the ideal home", "situation, what would that be?"], 1, 13, rHome));
@@ -949,7 +974,7 @@ function makeRounds()
 	aRounds.push(rHome);
 	totalRounds += 1;
 	 
-	const rPossessions = new Round("THE HOME FRONT", "POSSESSIONS / ADMINISTRATION", background3);
+	const rPossessions = new Round("THE HOME FRONT", "POSSESSIONS / ADMINISTRATION")//, background3);
 	rPossessions.addQuestion(new Question(["Further Observations"], 1, 15, rPossessions));
 	rPossessions.addQuestion(new Question(["Given the situation what one item would", "you rescue from your house?"], 1, 14, rPossessions));
 	rPossessions.addQuestion(new Question(["Are there unnecessary items that you", "hoard, that you wouldn't admit to others?"], 1, 13, rPossessions));
@@ -970,7 +995,7 @@ function makeRounds()
 
 	//
 
-	const rHealth = new Round("PERSONAL RESPONSIBILITY", "HEALTH", background4);
+	const rHealth = new Round("PERSONAL RESPONSIBILITY", "HEALTH")//, background4);
 	rHealth.addQuestion(new Question(["Further Observations"], 1, 15, rHealth));
 	rHealth.addQuestion(new Question(["Describe what a good week of eating well", "and exercising looks like?"], 1, 14, rHealth));
 	rHealth.addQuestion(new Question(["What are your go to excuses for not", "exercising regularly, at all or too much?"], 1, 13, rHealth));
@@ -989,7 +1014,7 @@ function makeRounds()
 	aRounds.push(rHealth);
 	totalRounds += 1;
 
-	const rRecreation = new Round("PERSONAL RESPONSIBILITY", "RECREATION", background5);
+	const rRecreation = new Round("PERSONAL RESPONSIBILITY", "RECREATION")//, background5);
 	rRecreation.addQuestion(new Question(["Further Observations"], 1, 15, rRecreation));
 	rRecreation.addQuestion(new Question(["How would you describe your relationship", "with your friends?"], 1, 14, rRecreation));
 	rRecreation.addQuestion(new Question(["Are you in control of your time spent on", "social media apps?"], 1, 13, rRecreation));
@@ -1008,7 +1033,7 @@ function makeRounds()
 	aRounds.push(rRecreation);
 	totalRounds += 1;
 
-	const rConduct = new Round("PERSONAL RESPONSIBILITY", "PERSONAL CONDUCT", background6);
+	const rConduct = new Round("PERSONAL RESPONSIBILITY", "PERSONAL CONDUCT")//, background6);
 	rConduct.addQuestion(new Question(["Further Observations"], 1, 15, rConduct));
 	rConduct.addQuestion(new Question(["How long should a hug last?"], 1, 14, rConduct));
 	rConduct.addQuestion(new Question(["Describe when you offended someone, or", "they offended you and how you resolved", "this?"], 1, 13, rConduct));
@@ -1029,7 +1054,7 @@ function makeRounds()
 
 	//
 
-	const rFinances = new Round("DIRECTION & DEVELOPMENT", "FINANCES", background7);
+	const rFinances = new Round("DIRECTION & DEVELOPMENT", "FINANCES")//, background7);
 	rFinances.addQuestion(new Question(["Further Observations"], 1, 15, rFinances));
 	rFinances.addQuestion(new Question(["How far ahead have you set financial", "goals? 1 day? 1 year? 5 years?"], 1, 14, rFinances));
 	rFinances.addQuestion(new Question(["How would you describe yourself when it", "comes to managing your finances?"], 1, 13, rFinances));
@@ -1048,7 +1073,7 @@ function makeRounds()
 	aRounds.push(rFinances);
 	totalRounds += 1;
 
-	const rCareer = new Round("DIRECTION & DEVELOPMENT", "CAREER", background8);
+	const rCareer = new Round("DIRECTION & DEVELOPMENT", "CAREER")//, background8);
 	rCareer.addQuestion(new Question(["Further Observations"], 1, 15, rCareer));
 	rCareer.addQuestion(new Question(["If you had a magic wand what three things", "would you change today with your work?"], 1, 14, rCareer));
 	rCareer.addQuestion(new Question(["Can you describe your ideal career/job", "including timeframes or locations?"], 1, 13, rCareer));
@@ -1067,7 +1092,7 @@ function makeRounds()
 	aRounds.push(rCareer);
 	totalRounds += 1;
 
-	const rSpiritual = new Round("DIRECTION & DEVELOPMENT", "SPIRITUAL", background9);
+	const rSpiritual = new Round("DIRECTION & DEVELOPMENT", "SPIRITUAL")//, background9);
 	rSpiritual.addQuestion(new Question(["Further Observations"], 1, 15, rSpiritual));
 	rSpiritual.addQuestion(new Question(["On a scale of emotionally stunted or a", "tree hugger where you place yourself?"], 1, 14, rSpiritual));
 	rSpiritual.addQuestion(new Question(["How would you describe your mindset", "towards religious beliefs that differ from", "your own?"], 1, 13, rSpiritual));
@@ -1086,7 +1111,7 @@ function makeRounds()
 	aRounds.push(rSpiritual);
 	totalRounds += 1;
 
-	const rPersonalDev = new Round("DIRECTION & DEVELOPMENT", "PERSONAL DEVELOPMENT", background10);
+	const rPersonalDev = new Round("DIRECTION & DEVELOPMENT", "PERSONAL DEVELOPMENT")//, background10);
 	rPersonalDev.addQuestion(new Question(["Further Observations"], 1, 15, rPersonalDev));
 	rPersonalDev.addQuestion(new Question(["What is your best or most recent success", "story, how long did it take and why is it", "so memorable?"], 1, 14, rPersonalDev));
 	rPersonalDev.addQuestion(new Question(["What are your views on working with a", "mentor/coach?"], 1, 13, rPersonalDev));
@@ -1108,7 +1133,7 @@ function makeRounds()
 	//
 	//
 
-	const rBiggerPicture = new Round("THE RIGHT PLACE TO BE", "The Bigger Picture", background11);
+	const rBiggerPicture = new Round("THE RIGHT PLACE TO BE", "The Bigger Picture")//, background11);
 	rBiggerPicture.addQuestion(new Question(["Further Observations"], 1, 15, rBiggerPicture));
 	rBiggerPicture.addQuestion(new Question(["How can you improve the mental wealth", "of the staff?"], 1, 14, rBiggerPicture));
 	rBiggerPicture.addQuestion(new Question(["How can they increase your satisfaction", "and productivity?"], 1, 13, rBiggerPicture));
@@ -1127,7 +1152,7 @@ function makeRounds()
 	aRounds.push(rBiggerPicture);
 	totalRounds += 1;
 	///*
-	const rDifferent = new Round("THE RIGHT PLACE TO BE", "What Makes Your Organisation Different?", background12);
+	const rDifferent = new Round("THE RIGHT PLACE TO BE", "What Makes Your Organisation Different?")//, background12);
 	rDifferent.addQuestion(new Question(["Further Observations"], 1, 15, rDifferent));
 	rDifferent.addQuestion(new Question(["What is the company Vision and Mission?"], 1, 14, rDifferent));
 	rDifferent.addQuestion(new Question(["If there was one thing you could change,", "what would it be?"], 1, 13, rDifferent));
@@ -1146,7 +1171,7 @@ function makeRounds()
 	aRounds.push(rDifferent);
 	totalRounds += 1;
 	///*
-	const rCulture = new Round("THE RIGHT PLACE TO BE", "Culture", background13);
+	const rCulture = new Round("THE RIGHT PLACE TO BE", "Culture")//, background13);
 	rCulture.addQuestion(new Question(["Further Observations"], 1, 15, rCulture));
 	rCulture.addQuestion(new Question(["Describe the culture to a stranger:"], 1, 14, rCulture));
 	rCulture.addQuestion(new Question(["How has the company adapted to", "generational changes?"], 1, 13, rCulture));
@@ -1165,7 +1190,7 @@ function makeRounds()
 	aRounds.push(rCulture);
 	totalRounds += 1;
 
-	const rProcess = new Round("THE RIGHT PLACE TO BE", "Making Every Step of the Process Work", background14);
+	const rProcess = new Round("THE RIGHT PLACE TO BE", "Making Every Step of the Process Work")//, background14);
 	rProcess.addQuestion(new Question(["Further Observations"], 1, 15, rProcess));
 	rProcess.addQuestion(new Question(["When trouble comes and situations arise", "how are they dealt with?"], 1, 14, rProcess));
 	rProcess.addQuestion(new Question(["What obvious physical structures, layout", "or environment reveal the essence", "of the company?"], 1, 13, rProcess));
@@ -1186,7 +1211,7 @@ function makeRounds()
 
 	//
 
-	const rLeadership = new Round("WORLD, HERE WE COME!", "Leadership & Direction", background15);
+	const rLeadership = new Round("WORLD, HERE WE COME!", "Leadership & Direction")//, background15);
 	rLeadership.addQuestion(new Question(["Further Observations"], 1, 15, rLeadership));
 	rLeadership.addQuestion(new Question(["What one thing could be done now that", "would improve the leadership?"], 1, 14, rLeadership));
 	rLeadership.addQuestion(new Question(["How are future leaders encouraged to", "step up?"], 1, 13, rLeadership));
@@ -1205,7 +1230,7 @@ function makeRounds()
 	aRounds.push(rLeadership);
 	totalRounds += 1;
 
-	const rCommunication = new Round("WORLD, HERE WE COME!", "Communication Works", background16);
+	const rCommunication = new Round("WORLD, HERE WE COME!", "Communication Works")//, background16);
 	rCommunication.addQuestion(new Question(["Further Observations"], 1, 15, rCommunication));
 	rCommunication.addQuestion(new Question(["Describe a time where your", "communication approach made all the", "difference in that situation:"], 1, 14, rCommunication));
 	rCommunication.addQuestion(new Question(["How does the company approach the", "provision of mentors, role models and", "support buddies?"], 1, 13, rCommunication));
@@ -1224,7 +1249,7 @@ function makeRounds()
 	aRounds.push(rCommunication);
 	totalRounds += 1;
 
-	const rInnovating = new Round("WORLD, HERE WE COME!", "Communication Works", background17);
+	const rInnovating = new Round("WORLD, HERE WE COME!", "Communication Works")//, background17);
 	rInnovating.addQuestion(new Question(["Further Observations"], 1, 15, rInnovating));
 	rInnovating.addQuestion(new Question(["What qualifications and ISO standards", "have been attained recently?"], 1, 14, rInnovating));
 	rInnovating.addQuestion(new Question(["How are global discoveries considered", "and helping your evolution?"], 1, 13, rInnovating));
@@ -1245,7 +1270,7 @@ function makeRounds()
 
 	//
 
-	const rTeamPeople = new Round("THERE ARE NO WEAK LINKS", "The Team - The People", background18);
+	const rTeamPeople = new Round("THERE ARE NO WEAK LINKS", "The Team - The People")//, background18);
 	rTeamPeople.addQuestion(new Question(["Further Observations"], 1, 15, rTeamPeople));
 	rTeamPeople.addQuestion(new Question(["What consistent efforts are being made", "with staff wellbeing?"], 1, 14, rTeamPeople));
 	rTeamPeople.addQuestion(new Question(["How would you describe the approach to", "Mental Wealth?"], 1, 13, rTeamPeople));
@@ -1264,7 +1289,7 @@ function makeRounds()
 	aRounds.push(rTeamPeople);
 	totalRounds += 1;
 
-	const rYourRole = new Round("THERE ARE NO WEAK LINKS", "Your Role", background19);
+	const rYourRole = new Round("THERE ARE NO WEAK LINKS", "Your Role")//, background19);
 	rYourRole.addQuestion(new Question(["Further Observations"], 1, 15, rYourRole));
 	rYourRole.addQuestion(new Question(["What's the one major thing that's", "holding you back?"], 1, 14, rYourRole));
 	rYourRole.addQuestion(new Question(["How could you improve the company", "benefits package?"], 1, 13, rYourRole));
@@ -1283,7 +1308,7 @@ function makeRounds()
 	aRounds.push(rYourRole);
 	totalRounds += 1;
 
-	const rImprovement = new Round("THERE ARE NO WEAK LINKS", "Continuous Improvement is the Norm", background20);
+	const rImprovement = new Round("THERE ARE NO WEAK LINKS", "Continuous Improvement is the Norm")//, background20);
 	rImprovement.addQuestion(new Question(["Further Observations"], 1, 15, rImprovement));
 	rImprovement.addQuestion(new Question(["Describe your experience of working with", "coaches and mentors:"], 1, 14, rImprovement));
 	rImprovement.addQuestion(new Question(["How do you respond to feedback from", "others?"], 1, 13, rImprovement));
@@ -1424,7 +1449,7 @@ function generatePDF()
 				
 				if (i2 < 10) //if in the personal baseline section
 				{
-					if (aRounds[i2].questions[q].getAnswer() == 1) //if they answered yes
+					if (aRounds[i2].questions[q].answer == 1) //if they answered yes
 					{
 						textOut = doc.splitTextToSize((15-q) + ". " + questionText + " YES", wrapNum);
 					}
@@ -1435,7 +1460,7 @@ function generatePDF()
 				}
 				else //if in business baseline section
 				{
-					textOut = doc.splitTextToSize((15-q) + ". " + questionText + " " + aRounds[i2].questions[q].getAnswer(), wrapNum);
+					textOut = doc.splitTextToSize((15-q) + ". " + questionText + " " + aRounds[i2].questions[q].answer, wrapNum);
 				}
 				
 				for (t=0; t < textOut.length; t++) //for each line of text to be added
@@ -1471,7 +1496,7 @@ function generatePDF()
 				}
 				textOut = [];			
 				
-				textOut = doc.splitTextToSize(aRounds[i2].questions[j].getAnswer(), wrapNum);
+				textOut = doc.splitTextToSize(aRounds[i2].questions[j].answer, wrapNum);
 				for (t=0; t < textOut.length; t++)
 				{	
 					extraLines += 1;
@@ -1539,7 +1564,7 @@ function gameLoop()
 		{
 			if (!player.dance) //if the player is not celebrating
 			{		
-				aRounds[currentRound].background.active = true; //move the background
+				background.active = true; //move the background
 			}
 			player.active = true; //the player is walking
 			frameTimer -= 1; //reduce action timer
@@ -1550,7 +1575,7 @@ function gameLoop()
 			{
 				if (fadeAway) //if fade transition is activated
 				{
-					aRounds[currentRound].background.fadeOut = true; //begin animating transition
+					background.fadeOut = true; //begin animating transition
 					frameTimer = fadeTimeTrue; //set the timer for the transition
 				}
 				else //if not
@@ -1571,7 +1596,7 @@ function gameLoop()
 				player.active = false; //player is thinking
 				frameTimer = -1; //reduce action timer to -1 so that this step does not repeat
 			}
-			aRounds[currentRound].background.active = false; //stop the background from moving
+			background.active = false; //stop the background from moving
 		}
 		
 		if (fadeAway) //if a fade transition is happening
@@ -1579,14 +1604,19 @@ function gameLoop()
 			fadeTime -= 1; //reduce timer per frame
 			if (fadeTime == (fadeTimeTrue * 0.5)) //if halfway through the transition (background is invisible)
 			{
+				console.log("check fade");
 				currentRound += 1; //move to the next round
-				aRounds[currentRound].background.framesActive = gameFrame; //load the next background whilst it is not visible
+				background.bgNum += 1;
+				background.fadeOut = !background.fadeOut;
+				background.img.src = BGs[background.bgNum];
+				background.framesActive = gameFrame; //load the next background whilst it is not visible
 			}
 			else if (fadeTime <= 0) //if at the end of the fade
 			{
 				fadeAway = false; //no longer in the transition
 			}
 		}
+		//console.log(background.bgNum);
 	}
 }
 
@@ -1609,7 +1639,7 @@ function updateAll()
 		console.log("TXTAREA");
 		for (var i=0; i<txtArea.length; i++)
 		{
-			console.log(i + " " + txtArea[i].getText());
+			console.log(i + " " + txtArea[i].x.value);
 			txtArea[i].update();
 		}
 	}
@@ -1624,7 +1654,7 @@ function animate()
 	
 	if (!endOfQuestions) //if questionnaire is still going
 	{
-		aRounds[currentRound].background.draw(); //draw the current round's corresponding background
+		background.draw(); //draw the current round's corresponding background
 	}
 	else //if not
 	{

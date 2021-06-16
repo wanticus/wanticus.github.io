@@ -31,7 +31,29 @@ testBG2.src = 'testBG2.png';
 const pt2BGspr = new Image();
 pt2BGspr.src = 'mp2.png';
 
-const bg1 = new Image();
+let BGs = []
+BGs.push('mp1,1.png');
+BGs.push('mp1,2.png');
+BGs.push('mp1,3.png');
+BGs.push('mp2,1.png');
+BGs.push('mp2,2.png');
+BGs.push('mp2,3.png');
+BGs.push('mp3,1.png');
+BGs.push('mp3,2.png');
+BGs.push('mp3,3.png');
+BGs.push('mp3,1.png');
+BGs.push('mp4,1.png');
+BGs.push('mp4,2.png');
+BGs.push('mp4,3.png');
+BGs.push('mp4,1.png');
+BGs.push('mp5,1.png');
+BGs.push('mp5,2.png');
+BGs.push('mp5,1.png');
+BGs.push('mp6,1.png');
+BGs.push('mp6,2.png');
+BGs.push('mp6,3.png');
+
+/* const bg1 = new Image();
 bg1.src = 'mp1,1.png';
 const bg2 = new Image();
 bg2.src = 'mp1,2.png';
@@ -70,4 +92,4 @@ bg18.src = 'mp6,1.png';
 const bg19 = new Image();
 bg19.src = 'mp6,2.png';
 const bg20 = new Image();
-bg20.src = 'mp6,3.png';
+bg20.src = 'mp6,3.png'; */
