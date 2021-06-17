@@ -24,13 +24,6 @@ playerAnswer.src = 'Answer.png';
 const playerHead = new Image();
 playerHead.src = 'playerHead.png';
 
-const testBG = new Image();
-testBG.src = 'testBG.png';
-const testBG2 = new Image();
-testBG2.src = 'testBG2.png';
-const pt2BGspr = new Image();
-pt2BGspr.src = 'mp2.png';
-
 let BGs = []
 BGs.push('mp1,1.png');
 BGs.push('mp1,2.png');

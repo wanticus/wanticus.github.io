@@ -10,6 +10,8 @@ let canvasPos = canvas.getBoundingClientRect();
 
 function resize() {
 	
+	console.log("resize");
+	
 	if ((canvas.width > 1.125) && (canvas.height > 2))
 	{
 		var canvasRatio = canvas.height / canvas.width;
@@ -77,6 +79,8 @@ const mouse = {
 
 function checkBorders(b) //for checking if a click is within the border of a button
 {
+	console.log("checkborder");
+	
 	var inBorder = false;
 	
 	if (((mouse.x >= b.x) && (mouse.x <= (b.x + b.width))) && ((mouse.y >= b.y) && (mouse.y <= (b.y + b.height))))
@@ -89,6 +93,8 @@ function checkBorders(b) //for checking if a click is within the border of a but
 
 canvas.addEventListener('mousedown', function(event) //what happens when the mouse is clicked/screen is tapped
 {	
+	console.log("mousedown");
+	
 	mouse.click = true;
 	mouse.x = event.x - canvasPos.left; //get x position of mouse
 	mouse.y = event.y - canvasPos.top; //get y position of mouse
@@ -132,6 +138,7 @@ class Question
 	
 	activate(testNum)
 	{
+		console.log("question.activate");
 		switch (this.type) //determine which buttons to make based on what type of question this is
 		{
 			case 2:
@@ -237,6 +244,7 @@ class Round
 	
 	addQuestion(newQ) //add a new question to the round
 	{
+		console.log("round.addQuestion");
 		this.questions.push(newQ); //push the question to the questions array
 		if (newQ.type == 1) //if the question has a written answer, increase the value of written answers in this round
 		{
@@ -360,11 +368,13 @@ class FinalRound
 	
 	activate() //create buttons, display background and text box
 	{
+		console.log("finalround.addQuestion");
 		this.activated = true;
 		this.background.startStop();
 		player.active = false;
 		player.dance = false;
 		
+		console.log("finalround.activate");
 		this.txtBox = new TextBox(1, "textarea", 0.00125, 0.0777);
 		
 		for (var i=0; i<this.posMax+1; i++)
@@ -381,6 +391,7 @@ class FinalRound
 	
 	deactivate() //end the scorecard section
 	{
+		console.log("finalround.deactivate");
 		this.end = true;
 		for (var b=4; b>=0; b--)
 		{
@@ -899,8 +910,8 @@ function drawObjs(array)
 //
 
 const player = new Player();
+		console.log("make player");
 const mapDisplay = new MapScreen();
-const testQ = new Round("THE HOME FRONT", "- Family");
 const uiHand = new UIHandler();
 
 //
@@ -935,6 +946,7 @@ const background20 = new Background(bg20, 5); */
 
 function makeRounds()
 {
+	console.log("makeRounds");
 
 	const rFamily = new Round("THE HOME FRONT", "FAMILY")//, background1);
 	rFamily.addQuestion(new Question(["Further Observations"], 1, 15, rFamily));
@@ -1341,6 +1353,7 @@ makeRounds();
 //var imgLoaded = false;
 
 var mpLogo = new Image();
+		console.log("make logos");
 //mpLogo.crossOrigin = '*';
 mpLogo.src = 'mikeLogo.png';
 //mpLogo.onload = function() { resolve(mpLogo); imgLoaded = true; };
@@ -1385,6 +1398,7 @@ function generatePDF()
 		
 		if (roundCounter[roundCounterPos] <= 0) //if all rounds in this section are checked
 		{
+			console.log("generatePDF");
 			roundScores.push(tempScore); //add total score to array
 			tempScore = 0; //reset the temporary value
 			roundCounterPos += 1; //move to next section
@@ -1647,6 +1661,8 @@ function updateAll()
 
 function animate()
 {
+	ctx.beginPath();
+	
 	gameLoop();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "#000000"
@@ -1689,6 +1705,11 @@ function animate()
 	{
 		generatePDF(); //make the PDF
 	}
+	
+	ctx.fillStyle = "#FFFFFF"
+	ctx.fillText(gameFrame, canvas.width * 0.9, canvas.height * 0.02);
+	
+	ctx.closePath();
 }
 
 resize();
