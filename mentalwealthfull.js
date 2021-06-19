@@ -1756,18 +1756,23 @@ function animate()
 	
 	drawObjs(aButtons); //draw any buttons that are active
 	
-	gameFrame++; //increase amount of frames that have passed
-	window.requestAnimationFrame(animate); //recurse through this function
-	
 	if (endOfQuestions && !gameOver)// && imgLoaded) //if at the end
 	{
 		generatePDF(); //make the PDF
 	}
 	
 	ctx.fillStyle = "#FFFFFF"
-	ctx.fillText(gameFrame, canvas.width * 0.9, canvas.height * 0.02);
+	ctx.fillText("FRAMES: " + gameFrame, canvas.width * 0.9, canvas.height * 0.02);
 	
 	ctx.closePath();
+	
+	if (txtArea.length > 0)
+	{
+		txtArea[0].focus();
+	}
+	
+	gameFrame++; //increase amount of frames that have passed
+	window.requestAnimationFrame(animate); //recurse through this function
 }
 
 resize();
