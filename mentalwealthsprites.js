@@ -16,11 +16,17 @@ sndAnswering.push(new Audio('answer6.wav'));
 //
 
 const playerIdle = new Image();
-playerIdle.src = 'Idle.png';
+playerIdle.src = 'MI2f.png';
 const playerWalk = new Image();
-playerWalk.src = 'Walk.png';
+playerWalk.src = 'MWf.png';
 const playerAnswer = new Image();
-playerAnswer.src = 'Answer.png';
+playerAnswer.src = 'MA1f.png';
+const playerSwing = new Image();
+playerSwing.src = 'MCf.png';
+const playerFingerGuns = new Image();
+playerFingerGuns.src = 'MC2f.png';
+const playerJump = new Image();
+playerJump.src = 'MC3f.png';
 const playerHead = new Image();
 playerHead.src = 'playerHead.png';
 

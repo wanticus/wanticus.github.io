@@ -78,9 +78,7 @@ const mouse = {
 };
 
 function checkBorders(b) //for checking if a click is within the border of a button
-{
-	console.log("checkborder");
-	
+{	
 	var inBorder = false;
 	
 	if (((mouse.x >= b.x) && (mouse.x <= (b.x + b.width))) && ((mouse.y >= b.y) && (mouse.y <= (b.y + b.height))))
@@ -93,8 +91,6 @@ function checkBorders(b) //for checking if a click is within the border of a but
 
 canvas.addEventListener('mousedown', function(event) //what happens when the mouse is clicked/screen is tapped
 {	
-	console.log("mousedown");
-	
 	mouse.click = true;
 	mouse.x = event.x - canvasPos.left; //get x position of mouse
 	mouse.y = event.y - canvasPos.top; //get y position of mouse
@@ -119,6 +115,11 @@ canvas.addEventListener('mouseup', function(event)
 {
 	mouse.click = false;
 });
+canvas.addEventListener('keydown', function(event)
+{
+	window.localStorage.clear();
+});
+
 
 //
 //questions
@@ -138,7 +139,6 @@ class Question
 	
 	activate(testNum)
 	{
-		console.log("question.activate");
 		switch (this.type) //determine which buttons to make based on what type of question this is
 		{
 			case 2:
@@ -176,6 +176,10 @@ class Question
 		frameTimer = danceTime; //set players animation to celebration
 		player.dance = true; //set players animation to celebration
 		player.frameX = 0; //make sure player starts at the first frame of the animation
+		console.log((this.qNum-1));
+		window.localStorage.setItem(this.pRound.subtitle + (15 - this.qNum), score);
+		console.log("SAVED '" + score + "' AT: " + (this.pRound.subtitle + (15 - this.qNum)));
+		console.log(window.localStorage.getItem(this.pRound.subtitle + (15 - this.qNum)));
 	}
 	
 	getAnswer()
@@ -244,8 +248,21 @@ class Round
 	
 	addQuestion(newQ) //add a new question to the round
 	{
-		console.log("round.addQuestion");
+		console.log(window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)));
+		if (window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)) != null)
+		{
+			this.qNum -= 1;
+			console.log("LOADED '" + window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)) + "' FROM: " + (this.subtitle + (15 - newQ.qNum)));
+			newQ.answer = window.localStorage.getItem(this.subtitle + (15 - newQ.qNum));
+			if (newQ.qNum == 15)
+			{
+				currentRound += 1;
+				console.log("LOADING ROUND: " + currentRound);
+			}
+		}
 		this.questions.push(newQ); //push the question to the questions array
+		
+		
 		if (newQ.type == 1) //if the question has a written answer, increase the value of written answers in this round
 		{
 			this.writtenAnswers += 1;
@@ -326,10 +343,23 @@ class Round
 
 class ScorecardMember //object to store details of people on the Mental Wealth Team Scorecard
 {
-	constructor()
+	constructor(id)
 	{
-		this.name = "";
+		this.id = id;
+		
+		this.name = "";	
+		if (window.localStorage.getItem('scorecardMember' + this.id + 'Name') != null)
+		{
+			this.name = window.localStorage.getItem('scorecardMember' + this.id + 'Name');
+			console.log("LOADED '" + window.localStorage.getItem('scorecardMember' + this.id + 'Name')) + "' FROM: " + ('scorecardMember' + this.id + 'Name');
+		}
+		
 		this.score = 5;
+		if (window.localStorage.getItem('scorecardMember' + this.id + 'Score') != null)
+		{
+			this.score = window.localStorage.getItem('scorecardMember' + this.id + 'Score');
+			console.log("LOADED '" + window.localStorage.getItem('scorecardMember' + this.id + 'Score') + "' FROM: " + ('scorecardMember' + this.id + 'Score'));
+		}
 	}
 	
 	getName()
@@ -340,6 +370,7 @@ class ScorecardMember //object to store details of people on the Mental Wealth T
 	setName(newName)
 	{
 		this.name = newName;
+		window.localStorage.setItem('scorecardMember' + this.id + 'Name', newName);
 	}
 	
 	getScore()
@@ -350,6 +381,9 @@ class ScorecardMember //object to store details of people on the Mental Wealth T
 	setScore(newScore)
 	{
 		this.score = newScore;
+		window.localStorage.setItem('scorecardMember' + this.id + 'Score', newScore);
+		console.log("SAVED '" + newScore + "' AT: " + ('scorecardMember' + this.id + 'Score'));
+		console.log("CHCKING: " + window.localStorage.getItem('scorecardMember' + this.id + 'Score'));
 	}
 }
 
@@ -370,7 +404,7 @@ class FinalRound
 	{
 		console.log("finalround.addQuestion");
 		this.activated = true;
-		this.background.startStop();
+		background.startStop();
 		player.active = false;
 		player.dance = false;
 		
@@ -379,7 +413,7 @@ class FinalRound
 		
 		for (var i=0; i<this.posMax+1; i++)
 		{
-			this.members.push(new ScorecardMember()); //create the people for the scorecard
+			this.members.push(new ScorecardMember(i)); //create the people for the scorecard
 		}
 		
 		aButtons.push(new Bttn(0.02, 0.3125, 0.1111, 0.125, "<", -1, 3));
@@ -521,15 +555,17 @@ class MapScreen //progress bar that is displayed during fading transistions
 		{
 			ctx.save();
 			ctx.fillStyle = "#FFFFFF";
+			ctx.textAlign = 'center';
 			ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
 			//ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
-			ctx.fillText("MENTAL WEALTH METER:", this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
-			ctx.fillText("KEEP IT UP!", this.x + (canvas.width * 0.2666), this.y + this.barHeight + (canvas.height * 0.0437));
+			ctx.fillText("Coming Up Next:", (canvas.width * 0.5), this.y - (canvas.height * 0.0375));
+			ctx.fillText(aRounds[fadeRound].title + " - " + aRounds[fadeRound].subtitle, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.0437));
 			
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))), this.barHeight);
 			
-			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y + (canvas.height * 0.05));
+			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y + (canvas.height * 0.01));
+			ctx.textAlign = 'left';
 			ctx.restore();
 		}
 	}
@@ -615,7 +651,6 @@ class Bttn
 					aRounds[currentRound].answerQuestion(this.score, this.type);
 					for (var i = forMax; i >= 0; i--)
 					{
-						console.log(607 + " attempt " + i);
 						delete aButtons[i];
 						aButtons.pop();
 					}
@@ -805,7 +840,7 @@ class Player
 			this.frameXMax = 4;
 			
 			this.x = -(canvas.width * 0.4444);
-			this.y = (canvas.height * 0.66);
+			this.y = (canvas.height * 0.51);
 		}
 		
 		if (gameFrame % this.frameSpeed == 0) //if at a frame to animate
@@ -820,13 +855,14 @@ class Player
 					this.frameY = 0; //go back to first row
 				}
 			}
+			console.log("X: " + this.frameX + " / Y: " + this.frameY);
 		}
 	}
 	
 	draw()
 	{
 		ctx.save();
-		ctx.drawImage(this.sprites[this.state], (this.frameX * this.sprWidth), (this.frameY * this.sprHeight), this.sprWidth, this.sprHeight, this.x, this.y, this.sprWidth * 0.5 * txtMultiplier, this.sprHeight * 0.5 * txtMultiplier);	
+		ctx.drawImage(this.sprites[this.state], (this.frameX * this.sprWidth), (this.frameY * this.sprHeight), this.sprWidth, this.sprHeight, this.x, this.y, this.sprWidth * 0.7 * txtMultiplier, this.sprHeight * 0.7 * txtMultiplier);	
 		ctx.restore();
 	}
 }
@@ -866,18 +902,15 @@ class TextBox
 	update()
 	{
 		var txtValue = this.x.value;
-		console.log(canvas.height + " " + this.rows);
 		
 		document.getElementById("txtdisplay").removeChild(this.x);
 		
-		console.log(canvas.height + " " + this.rows);
 		this.x = document.createElement("TEXTAREA");
 		this.x.setAttribute("type", this.type);
 		this.x.setAttribute("rows", "" + Math.round(canvas.height * this.rows));
 		this.x.setAttribute("cols", "" + Math.round(canvas.width * this.cols));
 		this.x.setAttribute("font-size", "" + Math.round(24 * txtMultiplier));
 		this.setText(txtValue);
-		console.log((canvas.height * this.rows) + " " + (canvas.width * this.cols));
 		
 		this.para.appendChild(this.x);
 		document.getElementById("txtdisplay").appendChild(this.x);
@@ -946,8 +979,6 @@ const background20 = new Background(bg20, 5); */
 
 function makeRounds()
 {
-	console.log("makeRounds");
-
 	const rFamily = new Round("THE HOME FRONT", "FAMILY")//, background1);
 	rFamily.addQuestion(new Question(["Further Observations"], 1, 15, rFamily));
 	rFamily.addQuestion(new Question(["What changes are on the horizon in your", "family and how will you manage them?"], 1, 14, rFamily));
@@ -967,7 +998,7 @@ function makeRounds()
 	aRounds.push(rFamily);
 	totalRounds += 1;
 
-	const rHome = new Round("THE HOME FRONT", "HOME")//, background2);
+	/* const rHome = new Round("THE HOME FRONT", "HOME")//, background2);
 	rHome.addQuestion(new Question(["Further Observations"], 1, 15, rHome));
 	rHome.addQuestion(new Question(["How long do you expect to continue living", "where you currently are?"], 1, 14, rHome));
 	rHome.addQuestion(new Question(["If you were to create the ideal home", "situation, what would that be?"], 1, 13, rHome));
@@ -1337,11 +1368,38 @@ function makeRounds()
 	rImprovement.addQuestion(new Question(["The induction programme for new", "starters is fit for purpose."], 2, 2, rImprovement));
 	rImprovement.addQuestion(new Question(["Everyone has a personal and professional", "development plan."], 2, 1, rImprovement));
 	aRounds.push(rImprovement);
-	totalRounds += 1;
+	totalRounds += 1; */
 	
 	aFinalRound = new FinalRound();
 	aRounds.push(aFinalRound);
 	totalRounds += 1;
+	
+/* 	var allDataLoaded = false;
+	
+	for (var i=0; i<totalRounds-1; i++) //actually do it for all of totalRounds but last round will be different so come to that later
+	{
+		var i2 = i;
+		for (var j=1; j<16; j++)
+		{
+			var savedAnswer = window.localStorage.getItem(i2 + (15-j));
+			if (savedAnswer != null)
+			{
+				aRounds[i2].questions[15-j].answer = savedAnswer;
+				aRounds[i2].questions.pop();
+			}
+			else
+			{
+				allDataLoaded = true;
+				break;
+			}
+		}
+		
+		if (allDataLoaded == true)
+		{
+			currentRound = i;
+			break;
+		}
+	} */
 }
 
 makeRounds();
