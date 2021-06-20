@@ -1861,10 +1861,10 @@ function animate()
 	
 	ctx.closePath();
 	
-	if (txtArea.length > 0)
+/* 	if (txtArea.length > 0)
 	{
 		txtArea[0].x.focus();
-	}
+	} */
 	
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
