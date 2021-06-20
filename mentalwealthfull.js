@@ -1899,7 +1899,7 @@ function animate()
 		canvas.focus();
 	} */
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.01), (canvas.height * 0.01));
+	ctx.fillText(gameFrame, (canvas.width * 0.03), (canvas.height * 0.03));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
