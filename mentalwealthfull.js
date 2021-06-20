@@ -852,7 +852,7 @@ class UIHandler
 			ctx.fillStyle = "#FFFFFF";
 			ctx.textAlign = "center";
 			ctx.font = "bold " + (42 * txtMultiplier) + "px Arial";
-			ctx.fillText("CONGRATUALTIONS", canvas.width*0.5, borderBuffer + (canvas.height * 0.06)); 	
+			ctx.fillText("CONGRATULATIONS", canvas.width*0.5, borderBuffer + (canvas.height * 0.06)); 	
 			ctx.font = "bold " + (32 * txtMultiplier) + "px Arial";
 			ctx.fillText("THANKS FOR PLAYING!", (canvas.width * 0.5), (canvas.height * 0.325));
 			ctx.drawImage(mpLogo, 0, canvas.height * 0.1, mpLogo.width * 0.2 * txtMultiplier, mpLogo.height * 0.18 * txtMultiplier);
