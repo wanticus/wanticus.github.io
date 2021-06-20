@@ -52,7 +52,7 @@ let username = ""; //stores name for use in the PDF at the end
 let gameFrame = 0; //counts the amount of frames the game has been active for
 let frameTimer = 2; //timer that counts down by 1 each frame when above 0, used for animations and transitions
 let walkTime = 5;//20; //amount of frames the player will walk between questions
-let danceTime = 60;//0; //amount of frames player will celebrate after select an option
+let danceTime = 6;//0;//0; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
 let fadeRound = 0; //used to display which round is coming up next, not which round is currently active
@@ -597,9 +597,16 @@ class MapScreen //progress bar that is displayed during fading transistions
 			ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
 			//ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
 			ctx.fillText("Coming Up Next:", (canvas.width * 0.5), this.y - (canvas.height * 0.035));
-			ctx.fillText(aRounds[fadeRound].title, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
-			ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
-			ctx.fillText(aRounds[fadeRound].subtitle, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.08));
+			if (currentRound < totalRounds-1)
+			{
+				ctx.fillText(aRounds[fadeRound].title, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
+				ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
+				ctx.fillText(aRounds[fadeRound].subtitle, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.08));
+			else
+			{				
+				ctx.fillText("MENTAL WEALTH", (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
+				ctx.fillText("TEAM SCORECARD", (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.08));
+			}
 			
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))), this.barHeight);
@@ -676,11 +683,11 @@ class Bttn
 					break;
 
 				case 6:
-					if ((aFinalRound.txtBox.x.value != "") && (aFinalRound.txtBox.x.value != " "))
-					{
-						username = aFinalRound.txtBox.x.value;
+					//if ((aFinalRound.txtBox.getText() != "") && (aFinalRound.txtBox.x.getText() != " "))
+					//{
+						username = aFinalRound.txtBox.getText();
 						aFinalRound.deactivateAgain();
-					}
+					//}
 					break;
 				
 				default:
@@ -935,10 +942,10 @@ class Player
 					this.frameSpeed = 3;
 				}
 			}
-			
-			this.x = -(canvas.width * 0.77);
-			this.y = (canvas.height * 0.54);
 		}
+			
+		this.x = -(canvas.width * 0.77);
+		this.y = (canvas.height * 0.54);
 		
 		if (gameFrame % this.frameSpeed == 0) //if at a frame to animate
 		{
