@@ -29,6 +29,12 @@ function resize() {
 					height = (width * canvasRatio);// * 0.98;
 				}
 			}
+			else
+			{
+				width = window.innerHeight * 0.5625;
+				height = window.innerHeight;
+			}
+			
 			
 		/* 	if ((height < 2) || (width < 1))
 			{
