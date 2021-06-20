@@ -1,8 +1,8 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerHeight * 0.5625 * 0.95; //width of game area (450)
-canvas.height = window.innerHeight * 0.95; //height of game area (800)
+canvas.width = window.innerHeight * 0.5625; //width of game area (450)
+canvas.height = window.innerHeight; //height of game area (800)
 let canvasRatio = canvas.height / canvas.width;
 let txtMultiplier = (canvas.width/450);
 let borderBuffer = canvas.width * 0.02; //used to evenly space objects around the canvas
@@ -18,46 +18,38 @@ function resize() {
 			var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
 			var width;
 			var height;
-			console.log(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)));
+			
 			if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)))
 			{
 				if (windowRatio < canvasRatio) {
-					height = window.innerHeight;// * 0.98;
+					height = window.innerHeight * 0.95;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
 				} else {
-					width = (window.innerHeight * 0.5625);// * 0.98;
+					width = (window.innerHeight * 0.5625) * 0.95;// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
-				//canvasRatio = canvas.height / canvas.width;
 			}
 			else
 			{
-				var windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
+				windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
 				if (windowRatio < canvasRatio) {
-					height = window.innerWidth * 1.7777;// * 0.98;
+					height = window.innerWidth * 1.7777 * 0.95;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
 				} else {
-					width = (window.innerWidth);// * 0.98;
+					width = window.innerWidth * 0.95;// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
 			}
-			
 
 			canvas.style.width = width + 'px';
 			canvas.style.height = height + 'px';
 			canvas.width = width;
 			canvas.height = height;
+			canvasRatio = canvas.height / canvas.width;
 			txtMultiplier = (canvas.width/450);
 			borderBuffer = canvas.width * 0.02;
 			canvasPos = canvas.getBoundingClientRect()
 			updateAll();
-			
-			
-		/* 	if ((height < 2) || (width < 1))
-			{
-				width = 1.125;
-				height = 2;
-			} */
 		}
 	//}
 }
@@ -180,7 +172,7 @@ class Question
 				break;				
 			
 			case 1:
-				txtArea.push(new TextBox(1, "textarea", 0.006, 0.09));
+				txtArea.push(new TextBox(1, "textarea", 0.008, 0.1));
 				this.bSubmit = new Bttn(0.3444, 0.465, 0.3333, 0.0625, "SUBMIT", 0, 1);
 				aButtons.push(this.bSubmit);
 				break;
@@ -1844,6 +1836,7 @@ function updateAll()
 		console.log("TXTAREA");
 		for (var i=0; i<txtArea.length; i++)
 		{
+			console.log(i + " " + txtArea[i].x.value);
 			txtArea[i].update();
 		}
 	}
@@ -1890,7 +1883,6 @@ function animate()
 	
 	ctx.closePath();
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.2), (canvas.height * 0.07));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
