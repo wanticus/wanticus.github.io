@@ -1895,7 +1895,7 @@ function animate()
 		txtArea[0].x.focus();
 	} */
 	
-	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
+	if ((txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
 		//canvas.blur();
