@@ -125,6 +125,12 @@ canvas.addEventListener('mousedown', function(event) //what happens when the mou
 				{
 					aButtons[i].clicked();
 				}
+				
+				pass = checkBorders(clearData); //check if we are inside the boundries of current button
+				if (pass == true) //if we are, the button is clicked
+				{
+					clearData.clicked();
+				}
 			}	
 		}
 	}
@@ -778,8 +784,7 @@ class Bttn
 		ctx.restore();
 	}
 }
-clearData = new Bttn(0.96, 0.978, 0.04, 0.022, "", 0, 7);
-aButtons.push(clearData);
+clearData = new Bttn(0.91, 0.93, 0.04, 0.022, "", 0, 7);
 //
 //Backgrounds
 //
@@ -1903,6 +1908,7 @@ function animate()
 	{
 		txtArea[0].x.focus();
 	}
+	clearData.draw();
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
