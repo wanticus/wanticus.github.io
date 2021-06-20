@@ -1890,7 +1890,7 @@ function animate()
 	
 	ctx.closePath();
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.5), (canvas.height * 0.07));
+	ctx.fillText(gameFrame, (canvas.width * 0.2), (canvas.height * 0.07));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
