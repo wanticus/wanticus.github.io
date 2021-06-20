@@ -34,10 +34,10 @@ function resize() {
 			{
 				windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
 				if (windowRatio < canvasRatio) {
-					height = window.innerWidth * 1.7777 * 0.5;// * 0.98;
+					height = window.innerWidth * 1.7777 * 0.7;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
 				} else {
-					width = window.innerWidth * 0.5;// * 0.98;
+					width = window.innerWidth * 0.7;// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
 			}
