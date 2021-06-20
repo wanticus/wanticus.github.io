@@ -33,10 +33,7 @@ function resize() {
 				canvas.style.height = height * 0.95 + 'px';
 				canvas.width = width * 0.95;
 				canvas.height = height * 0.95;
-				canvasRatio = canvas.height / canvas.width;
-				txtMultiplier = (canvas.width/450);
-				borderBuffer = canvas.width * 0.02;
-				canvasPos = canvas.getBoundingClientRect()
+				//canvasRatio = canvas.height / canvas.width;
 			}
 			else
 			{
@@ -44,6 +41,9 @@ function resize() {
 				height = 800;
 			}
 			
+			txtMultiplier = (canvas.width/450);
+			borderBuffer = canvas.width * 0.02;
+			canvasPos = canvas.getBoundingClientRect()
 			updateAll();
 			
 			
@@ -1885,10 +1885,14 @@ function animate()
 	
 	ctx.closePath();
 	
-/* 	if (txtArea.length > 0)
+	if ((document.activeElement.nodeName == 'txtdisplay') && (txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
-	} */
+	}
+	else
+	{
+		canvas.focus();
+	}
 	
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
