@@ -28,11 +28,6 @@ function resize() {
 					width = (window.innerHeight * 0.5625);// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
-
-				canvas.style.width = width * 0.95 + 'px';
-				canvas.style.height = height * 0.95 + 'px';
-				canvas.width = width * 0.95;
-				canvas.height = height * 0.95;
 				//canvasRatio = canvas.height / canvas.width;
 			}
 			else
@@ -41,6 +36,11 @@ function resize() {
 				height = canvas.height;
 			}
 			
+
+			canvas.style.width = width * 0.95 + 'px';
+			canvas.style.height = height * 0.95 + 'px';
+			canvas.width = width * 0.95;
+			canvas.height = height * 0.95;
 			txtMultiplier = (canvas.width/450);
 			borderBuffer = canvas.width * 0.02;
 			canvasPos = canvas.getBoundingClientRect()
@@ -1889,7 +1889,7 @@ function animate()
 		txtArea[0].x.focus();
 	} */
 	
-	if ((txtArea.length > 0))
+	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
 		//canvas.blur();
@@ -1899,7 +1899,7 @@ function animate()
 		canvas.focus();
 	} */
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.8), (canvas.height * 0.07));
+	ctx.fillText(gameFrame, (canvas.width * 0.2), (canvas.height * 0.07));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
