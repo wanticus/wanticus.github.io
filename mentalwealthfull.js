@@ -1892,11 +1892,12 @@ function animate()
 	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
+		canvas.blur();
 	}
-	else
+/* 	else
 	{
 		canvas.focus();
-	}
+	} */
 	
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
