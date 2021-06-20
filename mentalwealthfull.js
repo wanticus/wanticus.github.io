@@ -1889,17 +1889,17 @@ function animate()
 		txtArea[0].x.focus();
 	} */
 	
-	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
+	if ((txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
-		canvas.blur();
+		//canvas.blur();
 	}
 /* 	else
 	{
 		canvas.focus();
 	} */
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.03), (canvas.height * 0.03));
+	ctx.fillText(gameFrame, (canvas.width * 0.8), (canvas.height * 0.03));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
