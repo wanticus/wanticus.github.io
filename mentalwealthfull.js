@@ -18,13 +18,16 @@ function resize() {
 			var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
 			var width;
 			var height;
-
-			if (windowRatio < canvasRatio) {
-				height = window.innerHeight;// * 0.98;
-				width = (height / canvasRatio);// * 0.98;
-			} else {
-				width = (window.innerHeight * 0.5625);// * 0.98;
-				height = (width * canvasRatio);// * 0.98;
+			console.log(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)));
+			if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)))
+			{
+				if (windowRatio < canvasRatio) {
+					height = window.innerHeight;// * 0.98;
+					width = (height / canvasRatio);// * 0.98;
+				} else {
+					width = (window.innerHeight * 0.5625);// * 0.98;
+					height = (width * canvasRatio);// * 0.98;
+				}
 			}
 			
 		/* 	if ((height < 2) || (width < 1))
