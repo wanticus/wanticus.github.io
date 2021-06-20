@@ -602,6 +602,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 				ctx.fillText(aRounds[fadeRound].title, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
 				ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
 				ctx.fillText(aRounds[fadeRound].subtitle, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.08));
+			}
 			else
 			{				
 				ctx.fillText("MENTAL WEALTH", (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
