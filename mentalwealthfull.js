@@ -7,6 +7,7 @@ let canvasRatio = canvas.height / canvas.width;
 let txtMultiplier = (canvas.width/450);
 let borderBuffer = canvas.width * 0.02; //used to evenly space objects around the canvas
 let canvasPos = canvas.getBoundingClientRect();
+let begin = false;
 
 function resize() {
 	
@@ -33,10 +34,10 @@ function resize() {
 			{
 				windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
 				if (windowRatio < canvasRatio) {
-					height = window.innerWidth * 1.7777 * 0.95;// * 0.98;
+					height = window.innerWidth * 1.7777 * 0.5;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
 				} else {
-					width = window.innerWidth * 0.95;// * 0.98;
+					width = window.innerWidth * 0.5;// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
 			}
@@ -132,15 +133,24 @@ canvas.addEventListener('mouseup', function(event)
 {
 	mouse.click = false;
 });
-canvas.addEventListener('keydown', function(event)
+/* canvas.addEventListener('keydown', function(event)
 {
 	window.localStorage.clear();
-});
+}); */
 
 
 //
 //questions
 //
+
+class titleSreen
+{
+	constructor()
+	{
+		this.begin = new Bttn(0.5, 0.4, 0.2, 0.1, "BEGIN", 0, 1);
+		this.clearData = new Bttn(0.8, 0.5, 0.08, 0.04, "CLEAR DATA", 0, 1);
+	}
+}
 
 class Question
 {
@@ -708,6 +718,11 @@ class Bttn
 						aFinalRound.deactivateAgain();
 					//}
 					break;
+					
+				case 7:
+					console.log("clear data");
+					window.localStorage.clear();
+					break;
 				
 				default:
 					var forMax = 1;
@@ -763,7 +778,8 @@ class Bttn
 		ctx.restore();
 	}
 }
-
+clearData = new Bttn(0.96, 0.978, 0.04, 0.022, "", 0, 7);
+aButtons.push(clearData);
 //
 //Backgrounds
 //
@@ -1883,8 +1899,10 @@ function animate()
 	
 	ctx.closePath();
 	
-	ctx.fillText(gameFrame, canvas.width*0.1, canvas.height*0.02);
-	
+	if (txtArea.length > 0)
+	{
+		txtArea[0].x.focus();
+	}
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }

@@ -1,4 +1,5 @@
 <link rel = "stylesheet" href = "style.css">
+<meta name='viewport' content='width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1'>
 <head>
 	<script src="./jsPDF/libs/png_support/zlib.js"></script>
 	<script src="./jsPDF/libs/png_support/png.js"></script>
@@ -13,13 +14,5 @@
 	<div id = "txtdisplay"></div>
 	<div id = "canvas"><canvas id = canvas1 tabindex = "1"></canvas></div>
 	<script src = "./mentalwealthfull.js"></script>
-	<script =
-				setTimeout(function () {
-			var viewheight = $(window).height();
-			var viewwidth = $(window).width();
-			var viewport = $("meta[name=viewport]");
-			viewport.attr("content", "height=" + viewheight + "px, width=" + 
-			viewwidth + "px, initial-scale=1.0");
-		}, 300); >
 	</script>
 </body>
