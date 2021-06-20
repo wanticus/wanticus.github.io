@@ -44,9 +44,12 @@ function resize() {
 			updateAll();
 		}
 	//}
-};
+}
 
-window.addEventListener('resize', resize, false);
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+{
+	window.addEventListener('resize', resize, false);
+}
 
 let username = ""; //stores name for use in the PDF at the end
 
@@ -439,13 +442,14 @@ class FinalRound
 	
 		for (var i=0; i<this.posMax+1; i++)
 		{
+			console.log(this.members);
 			this.members.push(new ScorecardMember(i)); //create the people for the scorecard
 		}
 		
 		console.log("finalround.activate");
 		txtArea.push(new TextBox(1, "textarea", 0.0012, 0.07));
-		//this.txtBox = txtArea[0];
-		txtArea[0].setText(this.members[0].getName());
+		this.txtBox = txtArea[0];
+		this.txtBox.setText(this.members[0].getName());
 		
 		aButtons.push(new Bttn(0.02, 0.3, 0.11, 0.125, "<", -1, 3));
 		aButtons.push(new Bttn(0.8667, 0.3, 0.11, 0.125, ">", 1, 3));
@@ -469,7 +473,7 @@ class FinalRound
 	
 	deactivateAgain() //generates the PDF and ends questionnaire
 	{
-		txtArea[0].remove();
+		this.txtBox.remove();
 		delete aButtons[0];
 		aButtons.pop();
 		endOfQuestions = true;
@@ -483,7 +487,7 @@ class FinalRound
 	{
 		this.members[this.pos].setName(this.txtBox.x.value); //saves the name in the text box for the current member
 		this.pos = this.checkInRange(this.pos + scrollVal, 0, this.posMax); //move to the next member, making sure we do not go below 0 or above 44
-		txtArea[0].setText(this.members[this.pos].getName()); //updates text box to show new members name
+		this.txtBox.setText(this.members[this.pos].getName()); //updates text box to show new members name
 	}
 	
 	changeScore(plusMinus) //increase or decrease score for the current member
