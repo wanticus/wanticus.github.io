@@ -174,7 +174,7 @@ class Question
 				break;				
 			
 			case 1:
-				txtArea.push(new TextBox(1, "textarea", 0.008, 0.1));
+				txtArea.push(new TextBox(1, "textarea", 0.007, 0.09));
 				this.bSubmit = new Bttn(0.3444, 0.465, 0.3333, 0.0625, "SUBMIT", 0, 1);
 				aButtons.push(this.bSubmit);
 				break;
