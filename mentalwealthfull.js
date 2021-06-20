@@ -10,8 +10,8 @@ let canvasPos = canvas.getBoundingClientRect();
 
 function resize() {
 	
-	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent) )
-	{
+	//if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+	//{
 		if ((canvas.width > 1.125) && (canvas.height > 2))
 		{
 			var canvasRatio = canvas.height / canvas.width;
@@ -43,7 +43,7 @@ function resize() {
 			canvasPos = canvas.getBoundingClientRect()
 			updateAll();
 		}
-	}
+	//}
 };
 
 window.addEventListener('resize', resize, false);
