@@ -46,14 +46,14 @@ function resize() {
 	//}
 }
 
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+/* if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 {
 	window.addEventListener('resize', updateAll, false);
 }
 else
-{
+{ */
 	window.addEventListener('resize', resize, false);
-}
+//}
 
 let username = ""; //stores name for use in the PDF at the end
 
@@ -102,7 +102,7 @@ canvas.addEventListener('mousedown', function(event) //what happens when the mou
 	mouse.click = true;
 	mouse.x = event.x - canvasPos.left; //get x position of mouse
 	mouse.y = event.y - canvasPos.top; //get y position of mouse
-	canvas.focus();
+	//canvas.focus();
 	
 	if ((aButtons.length > 0)) //if there are buttons of screen
 	{
