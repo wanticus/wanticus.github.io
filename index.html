@@ -11,6 +11,13 @@
 	<script src="./jsPDF/plugins/split_text_to_size.js"></script>
 </head>
 <body>
+	<script =
+		$(function() {
+			var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+			var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+			$("html, body").css({"width":w,"height":h});
+		}); >
+	</script>
 	<div id = "txtdisplay"></div>
 	<div id = "canvas"><canvas id = canvas1 tabindex = "1"></canvas></div>
 	<script src = "./mentalwealthfull.js"></script>
