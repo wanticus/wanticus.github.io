@@ -37,8 +37,8 @@ function resize() {
 			}
 			else
 			{
-				width = d;
-				height = 600;
+				width = canvas.width;
+				height = canvas.height;
 			}
 			
 			txtMultiplier = (canvas.width/450);
