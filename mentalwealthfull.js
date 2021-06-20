@@ -37,10 +37,10 @@ function resize() {
 			}
 			
 
-			canvas.style.width = width * 0.95 + 'px';
-			canvas.style.height = height * 0.95 + 'px';
-			canvas.width = width * 0.95;
-			canvas.height = height * 0.95;
+			canvas.style.width = width + 'px';
+			canvas.style.height = height + 'px';
+			canvas.width = width;
+			canvas.height = height;
 			txtMultiplier = (canvas.width/450);
 			borderBuffer = canvas.width * 0.02;
 			canvasPos = canvas.getBoundingClientRect()
