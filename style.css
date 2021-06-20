@@ -22,7 +22,7 @@ textarea
 	outline: none;
 	border: none;
 	padding: 2px;
-	z-index: 2;
+	z-index: 10;
 }
 #canvas1
 {

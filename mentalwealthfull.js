@@ -1890,21 +1890,6 @@ function animate()
 	
 	ctx.closePath();
 	
-/* 	if (txtArea.length > 0)
-	{
-		txtArea[0].x.focus();
-	} */
-	
-	if ((txtArea.length > 0))
-	{
-		txtArea[0].x.focus();
-		//canvas.blur();
-	}
-/* 	else
-	{
-		canvas.focus();
-	} */
-	
 	ctx.fillText(gameFrame, (canvas.width * 0.5), (canvas.height * 0.07));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
