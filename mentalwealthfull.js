@@ -31,8 +31,8 @@ function resize() {
 			}
 			else
 			{
-				width = window.innerHeight * 0.5625;
-				height = window.innerHeight;
+				width = 450;
+				height = 800;
 			}
 			
 			
