@@ -10,38 +10,39 @@ let canvasPos = canvas.getBoundingClientRect();
 
 function resize() {
 	
-	console.log("resize");
-	
-	if ((canvas.width > 1.125) && (canvas.height > 2))
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent) )
 	{
-		var canvasRatio = canvas.height / canvas.width;
-		var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
-		var width;
-		var height;
-
-		if (windowRatio < canvasRatio) {
-			height = window.innerHeight;// * 0.98;
-			width = (height / canvasRatio);// * 0.98;
-		} else {
-			width = (window.innerHeight * 0.5625);// * 0.98;
-			height = (width * canvasRatio);// * 0.98;
-		}
-		
-	/* 	if ((height < 2) || (width < 1))
+		if ((canvas.width > 1.125) && (canvas.height > 2))
 		{
-			width = 1.125;
-			height = 2;
-		} */
+			var canvasRatio = canvas.height / canvas.width;
+			var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
+			var width;
+			var height;
 
-		canvas.style.width = width * 0.95 + 'px';
-		canvas.style.height = height * 0.95 + 'px';
-		canvas.width = width * 0.95;
-		canvas.height = height * 0.95;
-		canvasRatio = canvas.height / canvas.width;
-		txtMultiplier = (canvas.width/450);
-		borderBuffer = canvas.width * 0.02;
-		canvasPos = canvas.getBoundingClientRect()
-		updateAll();
+			if (windowRatio < canvasRatio) {
+				height = window.innerHeight;// * 0.98;
+				width = (height / canvasRatio);// * 0.98;
+			} else {
+				width = (window.innerHeight * 0.5625);// * 0.98;
+				height = (width * canvasRatio);// * 0.98;
+			}
+			
+		/* 	if ((height < 2) || (width < 1))
+			{
+				width = 1.125;
+				height = 2;
+			} */
+
+			canvas.style.width = width * 0.95 + 'px';
+			canvas.style.height = height * 0.95 + 'px';
+			canvas.width = width * 0.95;
+			canvas.height = height * 0.95;
+			canvasRatio = canvas.height / canvas.width;
+			txtMultiplier = (canvas.width/450);
+			borderBuffer = canvas.width * 0.02;
+			canvasPos = canvas.getBoundingClientRect()
+			updateAll();
+		}
 	}
 };
 
@@ -434,8 +435,8 @@ class FinalRound
 		this.activated = true;
 		background.startStop();
 		player.active = false;
-		player.dance = false;
-		
+		player.dance = false;	
+	
 		for (var i=0; i<this.posMax+1; i++)
 		{
 			this.members.push(new ScorecardMember(i)); //create the people for the scorecard
@@ -443,8 +444,8 @@ class FinalRound
 		
 		console.log("finalround.activate");
 		txtArea.push(new TextBox(1, "textarea", 0.0012, 0.07));
-		this.txtBox = txtArea[0];
-		this.txtBox.setText(this.members[0].getName());
+		//this.txtBox = txtArea[0];
+		txtArea[0].setText(this.members[0].getName());
 		
 		aButtons.push(new Bttn(0.02, 0.3, 0.11, 0.125, "<", -1, 3));
 		aButtons.push(new Bttn(0.8667, 0.3, 0.11, 0.125, ">", 1, 3));
@@ -468,7 +469,7 @@ class FinalRound
 	
 	deactivateAgain() //generates the PDF and ends questionnaire
 	{
-		this.txtBox.remove();
+		txtArea[0].remove();
 		delete aButtons[0];
 		aButtons.pop();
 		endOfQuestions = true;
@@ -482,7 +483,7 @@ class FinalRound
 	{
 		this.members[this.pos].setName(this.txtBox.x.value); //saves the name in the text box for the current member
 		this.pos = this.checkInRange(this.pos + scrollVal, 0, this.posMax); //move to the next member, making sure we do not go below 0 or above 44
-		this.txtBox.setText(this.members[this.pos].getName()); //updates text box to show new members name
+		txtArea[0].setText(this.members[this.pos].getName()); //updates text box to show new members name
 	}
 	
 	changeScore(plusMinus) //increase or decrease score for the current member
@@ -525,7 +526,7 @@ class FinalRound
 		if (this.activated)
 		{		
 				ctx.save();
-				this.txtBox.update();
+				//txtArea[0].update();
 			
 				ctx.fillStyle = "#FFFFFF";
 				ctx.font = "bold " + (26 * txtMultiplier) + "px Arial";
