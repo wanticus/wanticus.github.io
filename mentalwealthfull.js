@@ -18,9 +18,9 @@ function resize() {
 			var windowRatio = window.innerHeight / (window.innerHeight * 0.5625);
 			var width;
 			var height;
-	/* 		console.log(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)));
+			console.log(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)));
 			if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)))
-			{ */
+			{
 				if (windowRatio < canvasRatio) {
 					height = window.innerHeight;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
@@ -34,13 +34,13 @@ function resize() {
 				canvas.width = width * 0.95;
 				canvas.height = height * 0.95;
 				//canvasRatio = canvas.height / canvas.width;
-/* 			}
+			}
 			else
 			{
 				width = 338;
 				height = 600;
 			}
-			 */
+			
 			txtMultiplier = (canvas.width/450);
 			borderBuffer = canvas.width * 0.02;
 			canvasPos = canvas.getBoundingClientRect()
@@ -174,7 +174,7 @@ class Question
 				break;				
 			
 			case 1:
-				txtArea.push(new TextBox(1, "textarea", 0.007, 0.09));
+				txtArea.push(new TextBox(1, "textarea", 0.006, 0.09));
 				this.bSubmit = new Bttn(0.3444, 0.465, 0.3333, 0.0625, "SUBMIT", 0, 1);
 				aButtons.push(this.bSubmit);
 				break;
@@ -1889,14 +1889,14 @@ function animate()
 		txtArea[0].x.focus();
 	} */
 	
-/* 	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
+	if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
 	}
 	else
 	{
 		canvas.focus();
-	} */
+	}
 	
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
