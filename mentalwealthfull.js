@@ -32,8 +32,14 @@ function resize() {
 			}
 			else
 			{
-				width = canvas.width;
-				height = canvas.height;
+				var windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
+				if (windowRatio < canvasRatio) {
+					height = window.innerWidth * 1.7777;// * 0.98;
+					width = (height / canvasRatio);// * 0.98;
+				} else {
+					width = (window.innerWidth);// * 0.98;
+					height = (width * canvasRatio);// * 0.98;
+				}
 			}
 			
 
