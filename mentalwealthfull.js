@@ -37,8 +37,8 @@ function resize() {
 			}
 			else
 			{
-				width = 450;
-				height = 800;
+				width = 45;
+				height = 80;
 			}
 			
 			txtMultiplier = (canvas.width/450);
@@ -1838,7 +1838,6 @@ function updateAll()
 		console.log("TXTAREA");
 		for (var i=0; i<txtArea.length; i++)
 		{
-			console.log(i + " " + txtArea[i].x.value);
 			txtArea[i].update();
 		}
 	}
