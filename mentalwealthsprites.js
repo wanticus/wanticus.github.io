@@ -3,6 +3,7 @@
 //
 
 const sndRoundEnd = new Audio('cheer.wav');
+const sndEndGame = new Audio('end.wav');
 
 let sndAnswering = [];
 sndAnswering.push(new Audio('answer.wav'));
@@ -10,6 +11,28 @@ sndAnswering.push(new Audio('answer3.wav'));
 sndAnswering.push(new Audio('answer4.wav'));
 sndAnswering.push(new Audio('answer5.wav'));
 sndAnswering.push(new Audio('answer6.wav'));
+
+//
+//UI
+//
+
+const uiHeader = new Image();
+uiHeader.src = 'header.png';
+/* const uiLightsTop = new Image();
+uiLightsTop.src = 'lightstop.png'; */
+const uiLightsBottom = new Image();
+uiLightsBottom.src = 'lightslow.png';
+const uiYesNo = new Image();
+uiYesNo.src = 'buttonsyesno.png';
+const ui1to5 = new Image();
+ui1to5.src = 'buttons1to5.png';
+const uiScorecard = new Image();
+uiScorecard.src = 'buttonslider2.png';
+const uiName = new Image();
+uiName.src = 'buttonslider22.png';
+const uiText = new Image();
+uiText.src = 'textboxui.png';
+
 
 //
 //sprites
@@ -31,7 +54,15 @@ const playerHead = new Image();
 playerHead.src = 'playerHead.png';
 
 let BGs = []
-BGs.push('mp1,1.png');
+BGs.push('main.png');
+BGs.push('full6.png');
+BGs.push('full5.png');
+BGs.push('full4.png');
+BGs.push('full3.png');
+BGs.push('full2.png');
+BGs.push('full1.png');
+
+/* BGs.push('mp1,1.png');
 BGs.push('mp1,2.png');
 BGs.push('mp1,3.png');
 BGs.push('mp2,1.png');
@@ -50,7 +81,7 @@ BGs.push('mp5,2.png');
 BGs.push('mp5,1.png');
 BGs.push('mp6,1.png');
 BGs.push('mp6,2.png');
-BGs.push('mp6,3.png');
+BGs.push('mp6,3.png'); */
 
 /* const bg1 = new Image();
 bg1.src = 'mp1,1.png';
