@@ -1,8 +1,8 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerHeight * 0.5625; //width of game area (450)
-canvas.height = window.innerHeight; //height of game area (800)
+canvas.width = window.innerHeight * 0.5625 * 0.95; //width of game area (450)
+canvas.height = window.innerHeight * 0.95; //height of game area (800)
 let canvasRatio = canvas.height / canvas.width;
 let txtMultiplier = (canvas.width/450);
 let borderBuffer = canvas.width * 0.02; //used to evenly space objects around the canvas
@@ -37,7 +37,7 @@ function resize() {
 			}
 			else
 			{
-				width = 338;
+				width = d;
 				height = 600;
 			}
 			
@@ -1889,17 +1889,17 @@ function animate()
 		txtArea[0].x.focus();
 	} */
 	
-	if ((txtArea.length > 0))
+/* 	if ((txtArea.length > 0))
 	{
 		txtArea[0].x.focus();
 		//canvas.blur();
-	}
+	} */
 /* 	else
 	{
 		canvas.focus();
 	} */
 	
-	ctx.fillText(gameFrame, (canvas.width * 0.8), (canvas.height * 0.03));
+	ctx.fillText(gameFrame, (canvas.width * 0.9), (canvas.height * 0.03));
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
