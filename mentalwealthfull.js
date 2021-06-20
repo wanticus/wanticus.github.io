@@ -28,6 +28,15 @@ function resize() {
 					width = (window.innerHeight * 0.5625);// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
+
+				canvas.style.width = width * 0.95 + 'px';
+				canvas.style.height = height * 0.95 + 'px';
+				canvas.width = width * 0.95;
+				canvas.height = height * 0.95;
+				canvasRatio = canvas.height / canvas.width;
+				txtMultiplier = (canvas.width/450);
+				borderBuffer = canvas.width * 0.02;
+				canvasPos = canvas.getBoundingClientRect()
 			}
 			else
 			{
@@ -35,22 +44,14 @@ function resize() {
 				height = 800;
 			}
 			
+			updateAll();
+			
 			
 		/* 	if ((height < 2) || (width < 1))
 			{
 				width = 1.125;
 				height = 2;
 			} */
-
-			canvas.style.width = width * 0.95 + 'px';
-			canvas.style.height = height * 0.95 + 'px';
-			canvas.width = width * 0.95;
-			canvas.height = height * 0.95;
-			canvasRatio = canvas.height / canvas.width;
-			txtMultiplier = (canvas.width/450);
-			borderBuffer = canvas.width * 0.02;
-			canvasPos = canvas.getBoundingClientRect()
-			updateAll();
 		}
 	//}
 }
@@ -67,7 +68,7 @@ else
 let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
-let frameTimer = 2; //timer that counts down by 1 each frame when above 0, used for animations and transitions
+let frameTimer = 100; //timer that counts down by 1 each frame when above 0, used for animations and transitions
 let walkTime = 5;//20; //amount of frames the player will walk between questions
 let danceTime = 6;//0;//0; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
@@ -816,11 +817,18 @@ class Background
 		
 		ctx.save();
 		ctx.globalAlpha = this.fadeValue; //global alpha is set to allow for the background to fade
-		ctx.translate(-xPos, 0);
-		for (var i = 0; i < imgNum; i++)
+		if (this.bgNum > 0)
 		{
-			ctx.drawImage(this.img, i * this.img.width * 0.5 * txtMultiplier, canvas.height - (this.img.height*0.5*txtMultiplier), this.img.width * 0.5 * txtMultiplier, this.img.height * 0.5 * txtMultiplier);
-		}		
+			ctx.translate(-xPos, 0);
+			for (var i = 0; i < imgNum; i++)
+			{
+				ctx.drawImage(this.img, i * this.img.width * 0.5 * txtMultiplier, canvas.height - (this.img.height*0.5*txtMultiplier), this.img.width * 0.5 * txtMultiplier, this.img.height * 0.5 * txtMultiplier);
+			}
+		}
+		else
+		{
+			ctx.drawImage(this.img, -1 * canvas.width * 0.13 * txtMultiplier, canvas.height - (this.img.height*0.5*txtMultiplier), this.img.width * 0.5 * txtMultiplier, this.img.height * 0.5 * txtMultiplier);
+		}
 		ctx.restore();
 		ctx.globalAlpha = 1; //global alpha must be reset to 1 here as otherwise all other objects will be drawn with same alpha as the background
 	}
@@ -1788,6 +1796,12 @@ function gameLoop()
 
 				if ((currentRound == 3) || (currentRound == 6) || (currentRound == 10) || (currentRound == 14) || (currentRound == 17) || (currentRound == 20))
 				{
+					if (currentRound == 20)
+					{
+						fadeTime = fadeTime * 0.05;
+						frameTimer = fadeTime;
+					}
+					
 					background.bgNum -= 1;
 					BGs.pop();
 					background.fadeOut = !background.fadeOut;
