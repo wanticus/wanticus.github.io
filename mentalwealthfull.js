@@ -48,6 +48,10 @@ function resize() {
 
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 {
+	window.addEventListener('resize', updateAll, false);
+}
+else
+{
 	window.addEventListener('resize', resize, false);
 }
 
