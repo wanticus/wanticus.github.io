@@ -565,12 +565,12 @@ class FinalRound
 					
 					ctx.fillStyle = "#000000";
 					ctx.font = (16 * txtMultiplier) + "px Arial";
-					ctx.fillText("Think about who already fits the bill for your mental wealth", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.015));
-					ctx.fillText("team in your existing network. Complete the following by", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.0375));
-					ctx.fillText("scoring each person's commitment level to you between", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.06));
-					ctx.fillText("1-10, where 1 is low, and 10 is high. Do not overthink these", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.0825));
-					ctx.fillText("numbers, it's just down to how you feel.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.105));
-					ctx.fillText("Only press 'SUBMIT' once you've entered everyone you can.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.1275));
+					ctx.fillText("Think about who already fits the bill for your mental wealth", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.031));
+					ctx.fillText("team in your existing network. Complete the following by", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.056));
+					ctx.fillText("scoring each person's commitment level to you between", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.081));
+					ctx.fillText("1-10, where 1 is low, and 10 is high. Do not overthink these", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.106));
+					ctx.fillText("numbers, it's just down to how you feel.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.129));
+					//ctx.fillText("Only press 'SUBMIT' once you've entered everyone you can.", borderBuffer, (canvas.height * 0.1) + borderBuffer + (canvas.height * 0.1275));
 				}
 				
 				ctx.restore();
@@ -602,7 +602,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 			ctx.font = "bold " + (24 * txtMultiplier) + "px Arial";
 			//ctx.fillText("STARTING ROUND " + (fadeRound+1) + " OF " + totalRounds, this.x + (canvas.width * 0.1555), this.y - (canvas.height * 0.0375));
 			ctx.fillText("Coming Up Next:", (canvas.width * 0.5), this.y - (canvas.height * 0.035));
-			if (currentRound < totalRounds-1)
+			if (fadeRound < totalRounds-1)
 			{
 				ctx.fillText(aRounds[fadeRound].title, (canvas.width * 0.5), this.y + this.barHeight + (canvas.height * 0.04));
 				ctx.font = "bold " + (20 * txtMultiplier) + "px Arial";
@@ -617,7 +617,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))), this.barHeight);
 			
-			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y + (canvas.height * 0.01));
+			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5), this.y + (canvas.height * 0.0035), playerHead.width * txtMultiplier, playerHead.height * txtMultiplier);
 			ctx.textAlign = 'left';
 			ctx.restore();
 		}
