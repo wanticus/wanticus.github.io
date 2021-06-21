@@ -34,10 +34,10 @@ function resize() {
 			{
 				windowRatio = (window.innerWidth * 1.7777) / window.innerWidth;
 				if (windowRatio < canvasRatio) {
-					height = window.innerWidth * 1.7777 * 0.7;// * 0.98;
+					height = window.innerWidth * 1.7777 * 0.75;// * 0.98;
 					width = (height / canvasRatio);// * 0.98;
 				} else {
-					width = window.innerWidth * 0.7;// * 0.98;
+					width = window.innerWidth * 0.75;// * 0.98;
 					height = (width * canvasRatio);// * 0.98;
 				}
 			}
@@ -125,12 +125,6 @@ canvas.addEventListener('mousedown', function(event) //what happens when the mou
 				{
 					aButtons[i].clicked();
 				}
-				
-				pass = checkBorders(clearData); //check if we are inside the boundries of current button
-				if (pass == true) //if we are, the button is clicked
-				{
-					clearData.clicked();
-				}
 			}	
 		}
 	}
@@ -197,22 +191,11 @@ class Question
 	{
 		this.answer = score; //store the answer
 		this.pRound.nextQuestion(); //move on to the next question
-		//if (player.state == 2)
-		//{
-			frameTimer = danceTime; //set players animation to celebration
-		//	console.log(frameTimer);
-		//}
-		//else
-		//{
-		//	frameTimer = 1200;
-		//}
+		frameTimer = danceTime; //set players animation to celebration
 		player.dance = true; //set players animation to celebration
 		player.frameX = 0; //make sure player starts at the first frame of the animation
 		player.frameY = 0; //make sure player starts at the first frame of the animation
-		console.log((this.qNum-1));
 		window.localStorage.setItem(this.pRound.subtitle + (15 - this.qNum), score);
-		console.log("SAVED '" + score + "' AT: " + (this.pRound.subtitle + (15 - this.qNum)));
-		console.log(window.localStorage.getItem(this.pRound.subtitle + (15 - this.qNum)));
 	}
 	
 	getAnswer()
@@ -291,11 +274,9 @@ class Round
 	
 	addQuestion(newQ) //add a new question to the round
 	{
-		//console.log(window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)));
 		if (window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)) != null)
 		{
 			this.qNum -= 1;
-			//console.log("LOADED '" + window.localStorage.getItem(this.subtitle + (15 - newQ.qNum)) + "' FROM: " + (this.subtitle + (15 - newQ.qNum)));
 			newQ.answer = window.localStorage.getItem(this.subtitle + (15 - newQ.qNum));
 			if (newQ.type != 1)
 			{
@@ -401,14 +382,12 @@ class ScorecardMember //object to store details of people on the Mental Wealth T
 		if (window.localStorage.getItem('scorecardMember' + this.id + 'Name') != null)
 		{
 			this.name = window.localStorage.getItem('scorecardMember' + this.id + 'Name');
-			console.log("LOADED '" + window.localStorage.getItem('scorecardMember' + this.id + 'Name')) + "' FROM: " + ('scorecardMember' + this.id + 'Name');
 		}
 		
 		this.score = 5;
 		if (window.localStorage.getItem('scorecardMember' + this.id + 'Score') != null)
 		{
 			this.score = parseInt(window.localStorage.getItem('scorecardMember' + this.id + 'Score'));
-			console.log("LOADED '" + window.localStorage.getItem('scorecardMember' + this.id + 'Score') + "' FROM: " + ('scorecardMember' + this.id + 'Score'));
 		}
 	}
 	
@@ -421,8 +400,6 @@ class ScorecardMember //object to store details of people on the Mental Wealth T
 	{
 		this.name = newName;
 		window.localStorage.setItem('scorecardMember' + this.id + 'Name', newName);
-		console.log("SAVED '" + newName + "' AT: " + ('scorecardMember' + this.id + 'Name'));
-		console.log("CHCKING: " + window.localStorage.getItem('scorecardMember' + this.id + 'Name'));
 	}
 	
 	getScore()
@@ -434,8 +411,6 @@ class ScorecardMember //object to store details of people on the Mental Wealth T
 	{
 		this.score = newScore;
 		window.localStorage.setItem('scorecardMember' + this.id + 'Score', newScore);
-		console.log("SAVED '" + newScore + "' AT: " + ('scorecardMember' + this.id + 'Score'));
-		console.log("CHCKING: " + window.localStorage.getItem('scorecardMember' + this.id + 'Score'));
 	}
 }
 
@@ -454,7 +429,6 @@ class FinalRound
 	
 	activate() //create buttons, display background and text box
 	{
-		console.log("finalround.addQuestion");
 		this.activated = true;
 		background.startStop();
 		player.active = false;
@@ -462,11 +436,9 @@ class FinalRound
 	
 		for (var i=0; i<this.posMax+1; i++)
 		{
-			console.log(this.members);
 			this.members.push(new ScorecardMember(i)); //create the people for the scorecard
 		}
 		
-		console.log("finalround.activate");
 		txtArea.push(new TextBox(1, "textarea", 0.0012, 0.07));
 		this.txtBox = txtArea[0];
 		this.txtBox.setText(this.members[0].getName());
@@ -480,7 +452,6 @@ class FinalRound
 	
 	deactivate() //end the scorecard section
 	{
-		console.log("finalround.deactivate");
 		this.end = true;
 		for (var b=4; b>=0; b--)
 		{
@@ -488,7 +459,6 @@ class FinalRound
 			aButtons.pop(); //remove buttons
 		}
 		aButtons.push(new Bttn(0.2888, 0.45, 0.4444, 0.07, "GET RESULTS", 0, 6)); //add a new button to get the PDF
-		console.log(aButtons);
 	}
 	
 	deactivateAgain() //generates the PDF and ends questionnaire
@@ -680,7 +650,6 @@ class Bttn
 					{
 						aRounds[currentRound].answerQuestion(txtArea[0].x.value, this.type); //else get the text
 					}
-					console.log(563);
 					delete aButtons[0];
 					aButtons.pop();
 					txtArea[0].remove(); //remove buttons and text box
@@ -783,7 +752,7 @@ class Bttn
 		ctx.restore();
 	}
 }
-clearData = new Bttn(0.91, 0.93, 0.04, 0.022, "", 0, 7);
+
 //
 //Backgrounds
 //
@@ -1005,7 +974,6 @@ class Player
 					this.frameY = 0; //go back to first row
 				}
 			}
-			//console.log("X: " + this.frameX + " / Y: " + this.frameY);
 		}
 	}
 	
@@ -1034,7 +1002,6 @@ class TextBox
 		this.x.setAttribute("rows", "" + Math.round(canvas.height * rows));
 		this.x.setAttribute("cols", "" + Math.round(canvas.width * cols));
 		this.x.setAttribute("font-size", "" + Math.round(14 * txtMultiplier));
-		console.log(this.x.getAttribute("rows") + " " + this.x.getAttribute("cols"));
 		this.para.appendChild(this.x);
 		document.getElementById("txtdisplay").appendChild(this.x);
 	}
@@ -1081,11 +1048,7 @@ class TitleScreen
 {
 	constructor()
 	{
-		//this.begin = ;
-		//this.clearData = new Bttn(0.8, 0.5, 0.08, 0.04, "CLEAR DATA", 0, 7);
-		console.log("title");
 		aButtons.push(new Bttn(0.08, 0.35, 0.85, 0.12, "BEGIN", 0, 8));
-		console.log(aButtons);
 		aButtons.push(new Bttn(0.32, 0.485, 0.38, 0.05, "CLEAR DATA", 0, 7));
 		this.img = new Image();
 		this.img.src = BGs[0];
@@ -1118,10 +1081,9 @@ class TitleScreen
 		ctx.fillStyle = "#FFFFFF";
 		ctx.textAlign = 'center';
 		ctx.font = "bold " + (42 * txtMultiplier) + "px Arial";
-		ctx.fillText("MENTAL WEALTH", (canvas.width * 0.5), (canvas.height * 0.29));
+		ctx.fillText("MENTAL WEALTH", (canvas.width * 0.5), (canvas.height * 0.28));
 		ctx.font = "bold " + (28 * txtMultiplier) + "px Arial";
-		ctx.fillText("PLAYABLE QUESTIONNAIRE", (canvas.width * 0.5), (canvas.height * 0.33));
-		ctx.font = "bold " + (32 * txtMultiplier) + "px Arial";
+		ctx.fillText("PLAYABLE QUESTIONNAIRE", (canvas.width * 0.5), (canvas.height * 0.32));
 		ctx.textAlign = 'left';
 		
 		
@@ -1623,14 +1585,12 @@ function generatePDF()
 		
 		if (roundCounter[roundCounterPos] <= 0) //if all rounds in this section are checked
 		{
-			console.log("generatePDF");
 			roundScores.push(tempScore); //add total score to array
 			tempScore = 0; //reset the temporary value
 			roundCounterPos += 1; //move to next section
 		}
 	}
 
-	//doc.addImage(mpLogo, 'PNG', (docWidth * 0.5) - (mpLogo.width * 0.5), (docHeight * 0.5) - (mpLogo.height * 0.5), mpLogo.width, mpLogo.height); //add mike's logo (cannot get it to work though)
 	doc.text("MENTAL WEALTH QUESTIONNAIRE", 10, 50);
 	doc.text("For: " + username, 10, 70); //title page			
 	doc.addPage();
@@ -1752,7 +1712,6 @@ function generatePDF()
 	
 	if (!aFinalRound.activated) //mainly here for testing purposes, adds details of final round if it is activated
 	{
-		console.log("make scorecard");
 		doc.text("MENTAL WEALTH SCORECARD", 10, 50);
 		doc.text("Your total score for this section was: " + aFinalRound.calcuateScore(), 10, 70); //title page
 		
@@ -1845,7 +1804,6 @@ function gameLoop()
 			fadeTime -= 1; //reduce timer per frame
 			if (fadeTime == (fadeTimeTrue * 0.5)) //if halfway through the transition (background is invisible)
 			{
-				console.log("changeRound");
 				currentRound += 1; //move to the next round
 
 				if ((currentRound == 3) || (currentRound == 6) || (currentRound == 10) || (currentRound == 14) || (currentRound == 17) || (currentRound == 20))
@@ -1859,7 +1817,6 @@ function gameLoop()
 					background.bgNum -= 1;
 					BGs.pop();
 					background.fadeOut = !background.fadeOut;
-					console.log("fading");
 					background.img.src = BGs[background.bgNum];
 					background.framesActive = gameFrame; //load the next background whilst it is not visible
 				}
@@ -1869,7 +1826,6 @@ function gameLoop()
 				fadeAway = false; //no longer in the transition
 			}
 		}
-		//console.log(background.bgNum);
 	}
 }
 
@@ -1889,10 +1845,8 @@ function updateAll()
 	
 	if (txtArea.length > 0)
 	{
-		console.log("TXTAREA");
 		for (var i=0; i<txtArea.length; i++)
 		{
-			console.log(i + " " + txtArea[i].x.value);
 			txtArea[i].update();
 		}
 	}
@@ -1960,8 +1914,7 @@ function animate()
 	}
 		
 	drawObjs(aButtons); //draw any buttons that are active
-		
-	clearData.draw();
+	
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function
 }
