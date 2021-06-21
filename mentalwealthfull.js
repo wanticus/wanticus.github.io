@@ -1896,21 +1896,15 @@ function animate()
 		
 		ctx.closePath();
 		
-		if ((document.activeElement.nodeName == 'txtdisplay') && (txtArea.length > 0))
+/* 		if (txtArea.length > 0)
 		{
-/* 			if (document.activeElement.nodeName == 'TEXTAREA')
-			{ */
+			console.log(document.activeElement.nodeName);
+		} */
+		
+		if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
+		{
 				txtArea[0].x.focus();
 				canvas.blur();
-			/*}
-			else
-			{ 
-				txtArea[0].x.blur();
-			}*/
-		}
-		else
-		{
-			canvas.focus();
 		}
 	}
 	else
