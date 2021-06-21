@@ -1896,6 +1896,9 @@ function updateAll()
 			txtArea[i].update();
 		}
 	}
+	
+	mapDisplay.x = borderBuffer;
+	mapDisplay.y = (canvas.height * 0.34);
 }
 
 function animate()
