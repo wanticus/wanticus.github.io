@@ -1896,7 +1896,7 @@ function animate()
 		
 		ctx.closePath();
 		
-		if (txtArea.length > 0)
+		if ((document.activeElement.nodeName == 'txtdisplay') && (txtArea.length > 0))
 		{
 /* 			if (document.activeElement.nodeName == 'TEXTAREA')
 			{ */
