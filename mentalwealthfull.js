@@ -1901,10 +1901,9 @@ function animate()
 			console.log(document.activeElement.nodeName);
 		} */
 		
-		if ((document.activeElement.nodeName == 'TEXTAREA') && (txtArea.length > 0))
+		if ((document.activeElement.nodeName == 'TEXTAREA'))
 		{
-				txtArea[0].x.focus();
-				canvas.blur();
+				document.activeElement = txtArea[0].x;
 		}
 	}
 	else
