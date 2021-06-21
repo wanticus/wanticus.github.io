@@ -68,7 +68,7 @@ let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
 let frameTimer = 100; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 25; //amount of frames the player will walk between questions
+let walkTime = 20; //amount of frames the player will walk between questions
 let danceTime = 60; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
@@ -1906,6 +1906,10 @@ function animate()
 			{ 
 				txtArea[0].x.blur();
 			}*/
+		}
+		else
+		{
+			canvas.focus();
 		}
 	}
 	else

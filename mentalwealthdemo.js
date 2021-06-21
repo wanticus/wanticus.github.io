@@ -67,9 +67,9 @@ else
 let username = ""; //stores name for use in the PDF at the end
 
 let gameFrame = 0; //counts the amount of frames the game has been active for
-let frameTimer = 1//00; //timer that counts down by 1 each frame when above 0, used for animations and transitions
-let walkTime = 2//5; //amount of frames the player will walk between questions
-let danceTime = 6//0; //amount of frames player will celebrate after select an option
+let frameTimer = 100; //timer that counts down by 1 each frame when above 0, used for animations and transitions
+let walkTime = 20; //amount of frames the player will walk between questions
+let danceTime = 60; //amount of frames player will celebrate after select an option
 let fadeTimeTrue = 202; //time to reset the timer to for fading transistions
 let fadeTime = 202; //timer for fading in and out
 let fadeRound = 0; //used to display which round is coming up next, not which round is currently active
