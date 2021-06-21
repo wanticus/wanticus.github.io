@@ -149,15 +149,6 @@ canvas.addEventListener('mouseup', function(event)
 //questions
 //
 
-class titleSreen
-{
-	constructor()
-	{
-		this.begin = new Bttn(0.5, 0.4, 0.2, 0.1, "BEGIN", 0, 1);
-		this.clearData = new Bttn(0.8, 0.5, 0.08, 0.04, "CLEAR DATA", 0, 1);
-	}
-}
-
 class Question
 {
 	
@@ -646,7 +637,7 @@ class MapScreen //progress bar that is displayed during fading transistions
 			ctx.fillStyle = "#0099FF";
 			ctx.fillRect(this.x, this.y, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) * txtMultiplier, this.barHeight * txtMultiplier);
 			
-			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5) * txtMultiplier), this.y + (canvas.height * 0.0035) * txtMultiplier), playerHead.width * txtMultiplier, playerHead.height * txtMultiplier);
+			ctx.drawImage(playerHead, (((((canvas.width - (borderBuffer * 2)) / totalRounds) * fadeRound) - ((canvas.width - (borderBuffer * 2)) / totalRounds)) + (((canvas.width - (borderBuffer * 2)) / totalRounds) * ((fadeTimeTrue - fadeTime) / fadeTimeTrue))) - (playerHead.width * 0.5) * txtMultiplier, this.y + (canvas.height * 0.0035) * txtMultiplier, playerHead.width * txtMultiplier, playerHead.height * txtMultiplier);
 			ctx.textAlign = 'left';
 			ctx.restore();
 		}
@@ -726,8 +717,16 @@ class Bttn
 					break;
 					
 				case 7:
-					console.log("clear data");
 					window.localStorage.clear();
+					sndDelete.play();
+					break;
+					
+				case 8:
+					if (!begin)
+					{
+						titleScreen.beginGame();
+						sndStart.play();
+					}
 					break;
 				
 				default:
@@ -926,7 +925,7 @@ class Player
 		this.sprHeight = 720; //height of each frame
 		this.state = 0; // 0 = idle / 1 = walking / 2 - answering
 		this.sprites = [playerIdle, playerWalk, playerAnswer, playerSwing, playerFingerGuns, playerJump]; //array to store sprites in position of corresponding state number
-		this.active = true; //whether playing is moving or standing still
+		this.active = false; //whether playing is moving or standing still
 		this.dance = false; //whether player has just answered a question or not
 		this.jump = false;
 		this.x = -(canvas.width * 0.4444);
@@ -1075,6 +1074,73 @@ class TextBox
 }
 
 //
+//TITLE SCREEN
+//
+
+class TitleScreen
+{
+	constructor()
+	{
+		//this.begin = ;
+		//this.clearData = new Bttn(0.8, 0.5, 0.08, 0.04, "CLEAR DATA", 0, 7);
+		console.log("title");
+		aButtons.push(new Bttn(0.08, 0.35, 0.85, 0.12, "BEGIN", 0, 8));
+		console.log(aButtons);
+		aButtons.push(new Bttn(0.32, 0.485, 0.38, 0.05, "CLEAR DATA", 0, 7));
+		this.img = new Image();
+		this.img.src = BGs[0];
+	}
+	
+	beginGame()
+	{
+		aButtons.pop();
+		aButtons.pop();
+
+		player.active = true;
+		
+		makeRounds();
+		begin = true;
+	}
+	
+	draw()
+	{
+		ctx.fillStyle = "#000000";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(this.img, -100, canvas.height - (this.img.height*0.5*txtMultiplier), this.img.width * 0.5 * txtMultiplier, this.img.height * 0.5 * txtMultiplier);
+		ctx.drawImage(mpLogo, 0, (canvas.height * 0.04), mpLogo.width * 0.2 * txtMultiplier, mpLogo.height * 0.18 * txtMultiplier);
+		
+		ctx.drawImage(uiLightsBottom, 0, -(canvas.height * 0.035), canvas.width, uiLightsBottom.height * 0.6 * txtMultiplier);
+		ctx.drawImage(uiLightsBottom, 0, (mpLogo.height * 0.19 * txtMultiplier), canvas.width, uiLightsBottom.height * 0.6 * txtMultiplier);
+		ctx.drawImage(uiLightsBottom, 0, canvas.height - (390*txtMultiplier), canvas.width, uiLightsBottom.height * 0.6 * txtMultiplier);
+		
+		ctx.drawImage(uiText, 0, canvas.height*0.1, canvas.width, canvas.height*0.85);
+		
+		ctx.fillStyle = "#FFFFFF";
+		ctx.textAlign = 'center';
+		ctx.font = "bold " + (42 * txtMultiplier) + "px Arial";
+		ctx.fillText("MENTAL WEALTH", (canvas.width * 0.5), (canvas.height * 0.29));
+		ctx.font = "bold " + (28 * txtMultiplier) + "px Arial";
+		ctx.fillText("PLAYABLE QUESTIONNAIRE", (canvas.width * 0.5), (canvas.height * 0.33));
+		ctx.font = "bold " + (32 * txtMultiplier) + "px Arial";
+		ctx.textAlign = 'left';
+		
+		
+	}
+}
+const titleScreen = new TitleScreen();
+		
+//
+//create pieces
+//
+
+const player = new Player();
+const mapDisplay = new MapScreen();
+const uiHand = new UIHandler();
+
+let bg = new Image()
+bg.src = BGs[BGs.length-1];
+const background = new Background(bg, 5);
+//
 // draw functions
 //
 
@@ -1088,22 +1154,6 @@ function drawObjs(array)
 		}
 	}
 }
-
-//
-//create pieces
-//
-
-const player = new Player();
-		console.log("make player");
-const mapDisplay = new MapScreen();
-const uiHand = new UIHandler();
-
-//
-//create backgrounds
-//
-let bg = new Image()
-bg.src = BGs[BGs.length-1];
-const background = new Background(bg, 5);
 
 //
 //create questions
@@ -1534,24 +1584,9 @@ function makeRounds()
 	} */
 }
 
-makeRounds();
-
 //
 //PDF
 //
-
-//var imgLoaded = false;
-
-var mpLogo = new Image();
-		console.log("make logos");
-//mpLogo.crossOrigin = '*';
-mpLogo.src = 'mikeLogo.png';
-//mpLogo.onload = function() { resolve(mpLogo); imgLoaded = true; };
-//canvas.toDataURL(); */
-
-var bcLogo = new Image();
-bcLogo.src = 'catLogo.png';
-
 
 function createSentenceFromArray(textArray) //puts seperated pieces of text together for the PDF
 {
@@ -1867,47 +1902,62 @@ function animate()
 {
 	ctx.beginPath();
 	
-	gameLoop();
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "#000000"
-	ctx.fillRect(0, 0, canvas.width, canvas.height); //clear the canvas
-	
-	if (!endOfQuestions) //if questionnaire is still going
+	if (begin)
 	{
-		background.draw(); //draw the current round's corresponding background
+		gameLoop();
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "#000000"
+		ctx.fillRect(0, 0, canvas.width, canvas.height); //clear the canvas
+		
+		if (!endOfQuestions) //if questionnaire is still going
+		{
+			background.draw(); //draw the current round's corresponding background
+		}
+		else //if not
+		{
+			background.draw();
+			background.active = false; //draw this background
+		}
+		
+		player.update(); //update player animations
+		player.draw(); //draw the player
+		uiHand.draw(); //draw the UI
+		mapDisplay.draw(); //draw the map/progress bar
+		
+		if (!endOfQuestions)
+		{
+			aRounds[currentRound].draw(); //draw current round and questions if active
+		}
+		
+		if (endOfQuestions && !gameOver)// && imgLoaded) //if at the end
+		{
+			generatePDF(); //make the PDF
+		}
+		
+		//ctx.fillStyle = "#FFFFFF"
+		//ctx.fillText("FRAMES: " + gameFrame, canvas.width * 0.9, canvas.height * 0.02);
+		
+		ctx.closePath();
+		
+		if (txtArea.length > 0)
+		{
+			if (document.activeElement.nodeName == 'TEXTAREA')
+			{
+				txtArea[0].x.focus();
+			}
+			else
+			{
+				txtArea[0].x.blur();
+			}
+		}
 	}
-	else //if not
+	else
 	{
-		background.draw();
-		background.active = false; //draw this background
+		titleScreen.draw();
 	}
-	
-	player.update(); //update player animations
-	player.draw(); //draw the player
-	uiHand.draw(); //draw the UI
-	mapDisplay.draw(); //draw the map/progress bar
-	
-	if (!endOfQuestions)
-	{
-		aRounds[currentRound].draw(); //draw current round and questions if active
-	}
-	
+		
 	drawObjs(aButtons); //draw any buttons that are active
-	
-	if (endOfQuestions && !gameOver)// && imgLoaded) //if at the end
-	{
-		generatePDF(); //make the PDF
-	}
-	
-	//ctx.fillStyle = "#FFFFFF"
-	//ctx.fillText("FRAMES: " + gameFrame, canvas.width * 0.9, canvas.height * 0.02);
-	
-	ctx.closePath();
-	
-	if (txtArea.length > 0)
-	{
-		txtArea[0].x.focus();
-	}
+		
 	clearData.draw();
 	gameFrame++; //increase amount of frames that have passed
 	window.requestAnimationFrame(animate); //recurse through this function

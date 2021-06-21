@@ -5,6 +5,9 @@
 const sndRoundEnd = new Audio('cheer.wav');
 const sndEndGame = new Audio('end.wav');
 
+const sndDelete = new Audio('delete.mp3');
+const sndStart = new Audio('start.wav');
+
 let sndAnswering = [];
 sndAnswering.push(new Audio('answer.wav'));
 sndAnswering.push(new Audio('answer3.wav'));
@@ -52,6 +55,11 @@ const playerJump = new Image();
 playerJump.src = 'MC3f.png';
 const playerHead = new Image();
 playerHead.src = 'playerHead.png';
+
+const mpLogo = new Image();
+mpLogo.src = 'mikeLogo.png';
+const bcLogo = new Image();
+bcLogo.src = 'catLogo.png';
 
 let BGs = []
 BGs.push('main.png');
