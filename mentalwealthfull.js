@@ -1941,14 +1941,14 @@ function animate()
 		
 		if (txtArea.length > 0)
 		{
-			if (document.activeElement.nodeName == 'TEXTAREA')
-			{
+/* 			if (document.activeElement.nodeName == 'TEXTAREA')
+			{ */
 				txtArea[0].x.focus();
-			}
+			/*}
 			else
-			{
+			{ 
 				txtArea[0].x.blur();
-			}
+			}*/
 		}
 	}
 	else
