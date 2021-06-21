@@ -1903,7 +1903,8 @@ function animate()
 		
 		if ((document.activeElement.nodeName == 'TEXTAREA'))
 		{
-				canvas.blur();
+			document.activeElement.focus();
+			canvas.blur();
 		}
 	}
 	else
