@@ -1896,15 +1896,9 @@ function animate()
 		
 		ctx.closePath();
 		
-/* 		if (txtArea.length > 0)
-		{
-			console.log(document.activeElement.nodeName);
-		} */
-		
-		if ((document.activeElement.nodeName == 'TEXTAREA'))
+ 		if (txtArea.length > 0)
 		{
 			txtArea[0].x.focus();
-			canvas.blur();
 		}
 	}
 	else
